@@ -1,0 +1,8 @@
+frontend/node_modules
+
+frontend/.gitignore
+frontend/eslint.config.js
+frontend/package-lock.json
+frontend/package.json
+frontend/README.md
+frontend/vite.config.js

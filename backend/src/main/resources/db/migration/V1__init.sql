@@ -1,7 +1,6 @@
--- Esquema inicial do sistema do condomínio
+-- Esquema inicial do Sistema do Condomínio
 
-
--- Aualiza autoimaticamente a coluna atualizado_em
+-- Atualiza automaticamente a coluna atualizado_em
 CREATE OR REPLACE FUNCTION set_atualizado_em()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -11,18 +10,19 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- CONDOMÍNIO
+-- CONDOMINIO
 CREATE TABLE condominio (
-    id              BIGSERIAL       PRIMARY KEY,
-    nome            VARCHAR(120)    NOT NULL,
-    cnpj            VARCHAR(18)     UNIQUE,
-    endereco        VARCHAR(200)    NOT NULL,
-    cidade          VARCHAR(80)     NOT NULL,
-    uf              CHAR(2)         NOT NULL,
-    cep             VARCHAR(9),
-    criado_em       TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
-    atualizado_em   TIMESTAMPTZ     NOT NULL DEFAULT NOW()
+    id            BIGSERIAL         PRIMARY KEY,
+    nome          VARCHAR(120)      NOT NULL,
+    cnpj          VARCHAR(18)       UNIQUE,
+    endereco      VARCHAR(200)      NOT NULL,
+    cidade        VARCHAR(80)       NOT NULL,
+    uf            CHAR(2)           NOT NULL,
+    cep           VARCHAR(9),
+    criado_em     TIMESTAMPTZ       NOT NULL DEFAULT NOW(),
+    atualizado_em TIMESTAMPTZ       NOT NULL DEFAULT NOW()
 );
+
 CREATE TRIGGER trg_condominio_atualizado
     BEFORE UPDATE ON condominio
     FOR EACH ROW EXECUTE FUNCTION set_atualizado_em();
@@ -36,12 +36,13 @@ CREATE TABLE bloco (
     criado_em       TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
     CONSTRAINT uk_bloco_condominio_nome UNIQUE (condominio_id, nome)
 );
+
 CREATE INDEX idx_bloco_condominio ON bloco(condominio_id);
 
 
 -- UNIDADE
 CREATE TABLE unidade (
-    id              BIGSERIAL       PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     bloco_id        BIGINT          NOT NULL REFERENCES bloco(id) ON DELETE CASCADE,
     numero          VARCHAR(10)     NOT NULL,
     andar           INT,
@@ -52,10 +53,8 @@ CREATE TABLE unidade (
     CONSTRAINT ck_unidade_andar CHECK (andar IS NULL OR andar >= 0)
 );
 
-
 CREATE INDEX idx_unidade_bloco ON unidade(bloco_id);
 CREATE INDEX idx_unidade_ativo ON unidade(ativo);
-
 
 CREATE TRIGGER trg_unidade_atualizado
     BEFORE UPDATE ON unidade
@@ -82,10 +81,8 @@ CREATE TABLE usuario (
     )
 );
 
-
 CREATE INDEX idx_usuario_role ON usuario(role);
 CREATE INDEX idx_usuario_ativo ON usuario(ativo);
-
 
 CREATE TRIGGER trg_usuario_atualizado
     BEFORE UPDATE ON usuario
@@ -111,13 +108,12 @@ CREATE TABLE morador_unidade (
     )
 );
 
-
 CREATE INDEX idx_morador_unidade_unidade ON morador_unidade(unidade_id);
 
 
 -- COMUNICADO
 CREATE TABLE comunicado (
-    id              BIGSERIAL       PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     condominio_id   BIGINT          NOT NULL REFERENCES condominio(id) ON DELETE CASCADE,
     autor_id        BIGINT          NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
     titulo          VARCHAR(150)    NOT NULL,
@@ -131,17 +127,16 @@ CREATE TABLE comunicado (
     )
 );
 
-
 CREATE INDEX idx_comunicado_cond_pub ON comunicado(condominio_id, publicado_em DESC);
-
 
 CREATE TRIGGER trg_comunicado_atualizado
     BEFORE UPDATE ON comunicado
     FOR EACH ROW EXECUTE FUNCTION set_atualizado_em();
-   
+
+
 -- ÁREA COMUM
 CREATE TABLE area_comum (
-    id              BIGSERIAL       PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     condominio_id   BIGINT          NOT NULL REFERENCES condominio(id) ON DELETE CASCADE,
     nome            VARCHAR(80)     NOT NULL,
     descricao       VARCHAR(255),
@@ -155,7 +150,6 @@ CREATE TABLE area_comum (
     CONSTRAINT ck_area_taxa CHECK (taxa >= 0),
     CONSTRAINT ck_area_cap CHECK (capacidade IS NULL OR capacidade > 0)
 );
-
 
 CREATE INDEX idx_area_condominio ON area_comum(condominio_id);
 
@@ -178,11 +172,9 @@ CREATE TABLE reserva (
     )
 );
 
-
 CREATE INDEX idx_reserva_area_periodo ON reserva(area_comum_id, inicio, fim);
 CREATE INDEX idx_reserva_unidade ON reserva(unidade_id);
 CREATE INDEX idx_reserva_status ON reserva(status);
-
 
 CREATE TRIGGER trg_reserva_atualizado
     BEFORE UPDATE ON reserva
@@ -210,20 +202,18 @@ CREATE TABLE ocorrencia (
     )
 );
 
-
 CREATE INDEX idx_ocorrencia_status ON ocorrencia(status);
 CREATE INDEX idx_ocorrencia_unidade ON ocorrencia(unidade_id);
 CREATE INDEX idx_ocorrencia_respons ON ocorrencia(responsavel_id);
-
 
 CREATE TRIGGER trg_ocorrencia_atualizado
     BEFORE UPDATE ON ocorrencia
     FOR EACH ROW EXECUTE FUNCTION set_atualizado_em();
 
 
--- LANCAMENTO FINANCEIRO
+-- LANÇAMENTO FINANCEIRO
 CREATE TABLE lancamento_financeiro (
-    id              BIGSERIAL       PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     condominio_id   BIGINT          NOT NULL REFERENCES condominio(id) ON DELETE CASCADE,
     unidade_id      BIGINT          REFERENCES unidade(id) ON DELETE SET NULL,
     criado_por      BIGINT          NOT NULL REFERENCES usuario(id) ON DELETE RESTRICT,
@@ -246,12 +236,10 @@ CREATE TABLE lancamento_financeiro (
     )
 );
 
-
 CREATE INDEX idx_lanc_cond_venc ON lancamento_financeiro(condominio_id, data_vencimento);
 CREATE INDEX idx_lanc_unidade ON lancamento_financeiro(unidade_id);
 CREATE INDEX idx_lanc_status ON lancamento_financeiro(status);
 CREATE INDEX idx_lanc_tipo ON lancamento_financeiro(tipo);
-
 
 CREATE TRIGGER trg_lanc_atualizado
     BEFORE UPDATE ON lancamento_financeiro
@@ -269,7 +257,6 @@ CREATE TABLE log_auditoria (
     ip              VARCHAR(45),
     timestamp       TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );
-
 
 CREATE INDEX idx_log_usuario ON log_auditoria(usuario_id);
 CREATE INDEX idx_log_timestamp ON log_auditoria(timestamp DESC);

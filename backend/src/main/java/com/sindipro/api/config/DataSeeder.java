@@ -1,8 +1,8 @@
 package com.sindipro.api.config;
 
+import com.sindipro.api.usuario.Role;
 import com.sindipro.api.usuario.Usuario;
 import com.sindipro.api.usuario.UsuarioRepository;
-import com.sindipro.api.usuario.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -29,14 +29,14 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         usuarioRepository.saveAll(List.of(
-            novo("Administrador do Sistema", "admin@sindipro.local",   "admin123",   Role.ADMIN_SISTEMA),
-            novo("Carlos Síndico",           "sindico@sindipro.local", "sindico123", Role.SINDICO),
-            novo("Maria Moradora",           "morador@sindipro.local", "morador123", Role.MORADOR),
-            novo("João Porteiro",            "porteiro@sindipro.local","porteiro123",Role.PORTEIRO),
-            novo("Pedro Zelador",            "zelador@sindipro.local", "zelador123", Role.ZELADOR)
+            novo("Administrador do Sistema", "admin@condominio.local",   "admin123",  Role.ADMIN_SISTEMA),
+            novo("Carlos Síndico",           "sindico@condominio.local", "sindico123", Role.SINDICO),
+            novo("Maria Moradora",           "morador@condominio.local", "morador123", Role.MORADOR),
+            novo("João Porteiro",            "porteiro@condominio.local","porteiro123",Role.PORTEIRO),
+            novo("Pedro Zelador",            "zelador@condominio.local", "zelador123", Role.ZELADOR)
         ));
 
-        log.info("✅ Seed concluído. Login: admin@sindipro.local / admin123");
+        log.info("✅ Seed concluído. Login: admin@condominio.local / admin123");
     }
 
     private Usuario novo(String nome, String email, String senha, Role role) {

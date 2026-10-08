@@ -1,12 +1,12 @@
 package com.sindipro.api.bloco;
 
+import java.time.Instant;
+
 import com.sindipro.api.condominio.Condominio;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "bloco", uniqueConstraints = @UniqueConstraint(columnNames = {"condominio_id", "nome"}))
@@ -27,5 +27,5 @@ public class Bloco {
 
     @CreatedDate
     @Column(name = "criado_em", nullable = false, updatable = false)
-    private OffsetDateTime criadoEm;
+    private Instant criadoEm;
 }

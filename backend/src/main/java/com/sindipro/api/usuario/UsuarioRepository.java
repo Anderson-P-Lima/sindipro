@@ -1,5 +1,7 @@
 package com.sindipro.api.usuario;
 
+import java.time.Instant;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

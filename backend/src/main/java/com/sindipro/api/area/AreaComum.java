@@ -1,5 +1,7 @@
 package com.sindipro.api.area;
 
+import java.time.Instant;
+
 import com.sindipro.api.condominio.Condominio;
 import jakarta.persistence.*;
 import lombok.*;

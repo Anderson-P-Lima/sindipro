@@ -1,5 +1,7 @@
 package com.sindipro.api.config;
 
+import java.time.Instant;
+
 import com.sindipro.api.usuario.Role;
 import com.sindipro.api.usuario.Usuario;
 import com.sindipro.api.usuario.UsuarioRepository;

@@ -53,7 +53,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/sindipro
+    url: jdbc:postgresql://localhost:5433/sindipro
     username: sindipro
     password: sindipro123
     driver-class-name: org.postgresql.Driver

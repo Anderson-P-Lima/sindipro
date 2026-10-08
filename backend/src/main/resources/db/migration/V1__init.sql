@@ -17,7 +17,7 @@ CREATE TABLE condominio (
     cnpj          VARCHAR(18)       UNIQUE,
     endereco      VARCHAR(200)      NOT NULL,
     cidade        VARCHAR(80)       NOT NULL,
-    uf            CHAR(2)           NOT NULL,
+    uf            VARCHAR(2)           NOT NULL,
     cep           VARCHAR(9),
     criado_em     TIMESTAMPTZ       NOT NULL DEFAULT NOW(),
     atualizado_em TIMESTAMPTZ       NOT NULL DEFAULT NOW()

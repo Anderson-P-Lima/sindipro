@@ -1,10 +1,10 @@
 package com.sindipro.api.auditoria;
 
+import java.time.Instant;
+
 import com.sindipro.api.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "log_auditoria")
@@ -36,5 +36,5 @@ public class LogAuditoria {
 
     @Column(nullable = false)
     @Builder.Default
-    private OffsetDateTime timestamp = OffsetDateTime.now();
+    private Instant timestamp = Instant.now();
 }

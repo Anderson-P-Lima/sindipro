@@ -1,13 +1,13 @@
 package com.sindipro.api.unidade;
 
+import java.time.Instant;
+
 import com.sindipro.api.bloco.Bloco;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "unidade", uniqueConstraints = @UniqueConstraint(columnNames = {"bloco_id", "numero"}))
@@ -34,9 +34,9 @@ public class Unidade {
 
     @CreatedDate
     @Column(name = "criado_em", nullable = false, updatable = false)
-    private OffsetDateTime criadoEm;
+    private Instant criadoEm;
 
     @LastModifiedDate
     @Column(name = "atualizado_em", nullable = false)
-    private OffsetDateTime atualizadoEm;
+    private Instant atualizadoEm;
 }

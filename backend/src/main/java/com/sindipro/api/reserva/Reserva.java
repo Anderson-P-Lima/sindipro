@@ -1,5 +1,7 @@
 package com.sindipro.api.reserva;
 
+import java.time.Instant;
+
 import com.sindipro.api.area.AreaComum;
 import com.sindipro.api.unidade.Unidade;
 import com.sindipro.api.usuario.Usuario;
@@ -8,8 +10,6 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "reserva")
@@ -34,10 +34,10 @@ public class Reserva {
     private Usuario solicitante;
 
     @Column(nullable = false)
-    private OffsetDateTime inicio;
+    private Instant inicio;
 
     @Column(nullable = false)
-    private OffsetDateTime fim;
+    private Instant fim;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -49,9 +49,9 @@ public class Reserva {
 
     @CreatedDate
     @Column(name = "criado_em", nullable = false, updatable = false)
-    private OffsetDateTime criadoEm;
+    private Instant criadoEm;
 
     @LastModifiedDate
     @Column(name = "atualizado_em", nullable = false)
-    private OffsetDateTime atualizadoEm;
+    private Instant atualizadoEm;
 }

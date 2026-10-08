@@ -1,12 +1,12 @@
 package com.sindipro.api.usuario;
 
+import java.time.Instant;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "usuario")
@@ -42,13 +42,13 @@ public class Usuario {
     private Boolean ativo = true;
 
     @Column(name = "ultimo_login")
-    private OffsetDateTime ultimoLogin;
+    private Instant ultimoLogin;
 
     @CreatedDate
     @Column(name = "criado_em", nullable = false, updatable = false)
-    private OffsetDateTime criadoEm;
+    private Instant criadoEm;
 
     @LastModifiedDate
     @Column(name = "atualizado_em", nullable = false)
-    private OffsetDateTime atualizadoEm;
+    private Instant atualizadoEm;
 }

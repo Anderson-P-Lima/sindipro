@@ -1,5 +1,7 @@
 package com.sindipro.api.comunicado;
 
+import java.time.Instant;
+
 import com.sindipro.api.condominio.Condominio;
 import com.sindipro.api.usuario.Usuario;
 import jakarta.persistence.*;
@@ -7,8 +9,6 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "comunicado")
@@ -45,9 +45,9 @@ public class Comunicado {
 
     @Column(name = "publicado_em", nullable = false)
     @Builder.Default
-    private OffsetDateTime publicadoEm = OffsetDateTime.now();
+    private Instant publicadoEm = Instant.now();
 
     @LastModifiedDate
     @Column(name = "atualizado_em", nullable = false)
-    private OffsetDateTime atualizadoEm;
+    private Instant atualizadoEm;
 }

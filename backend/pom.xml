@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.condominio</groupId>
+    <groupId>com.sindipro</groupId>
     <artifactId>api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api</name>

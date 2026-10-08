@@ -1,5 +1,7 @@
 package com.sindipro.api.moradorunidade;
 
+import java.time.Instant;
+
 import com.sindipro.api.unidade.Unidade;
 import com.sindipro.api.usuario.Usuario;
 import jakarta.persistence.*;
@@ -8,8 +10,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
-
 @Entity
 @Table(name = "morador_unidade",
         uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "unidade_id"}))
@@ -45,5 +45,5 @@ public class MoradorUnidade {
 
     @CreatedDate
     @Column(name = "criado_em", nullable = false, updatable = false)
-    private OffsetDateTime criadoEm;
+    private Instant criadoEm;
 }

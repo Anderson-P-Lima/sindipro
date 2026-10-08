@@ -1,8 +1,30 @@
-frontend/node_modules
+# Java / Maven
 
-frontend/.gitignore
-frontend/eslint.config.js
-frontend/package-lock.json
-frontend/package.json
-frontend/README.md
-frontend/vite.config.js
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+!backend/mvnw.cmd
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Ambiente
+.env
+*.log
+
+# Windows
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk

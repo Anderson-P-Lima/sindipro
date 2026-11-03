@@ -16,9 +16,17 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
           AND r.inicio < :fim
           AND r.fim > :inicio
     """)
+
     List<Reserva> findConflitos(@Param("areaId") Long areaId,
                                 @Param("inicio") Instant inicio,
                                 @Param("fim") Instant fim);
+
+    @Query("""
+        SELECT COUNT(r) > 0 FROM Reserva r
+        WHERE r.areaComum.id = :areaId
+          AND r.status IN ('PENDENTE','APROVADA')
+    """)
+    boolean existsReservaAtivaPorArea(@Param("areaId") Long areaId);
 
     List<Reserva> findBySolicitanteIdOrderByInicioDesc(Long usuarioId);
 }

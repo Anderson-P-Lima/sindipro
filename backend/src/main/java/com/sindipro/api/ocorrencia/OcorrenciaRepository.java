@@ -11,5 +11,6 @@ public interface OcorrenciaRepository extends
         JpaSpecificationExecutor<Ocorrencia> {
 
     long countByStatus(StatusOcorrencia status);
-    long countByResponsavelIdAndStatusIn(Long responsavelId, java.util.List<StatusOcorrencia> status);
+    // [PREVIOUS] long countByResponsavelIdAndStatusIn(Long responsavelId, java.util.List<StatusOcorrencia> status);
+    long countByAutorIdAndStatus(Long autorId, StatusOcorrencia status);
 }

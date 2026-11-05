@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ReservaRepository extends
@@ -31,5 +32,28 @@ public interface ReservaRepository extends
     """)
     boolean existsReservaAtivaPorArea(@Param("areaId") Long areaId);
 
-    List<Reserva> findBySolicitanteIdOrderByInicioDesc(Long usuarioId);
+    // [PREVIOUS] List<Reserva> findBySolicitanteIdOrderByInicioDesc(Long usuarioId);
+
+    long countByStatus(StatusReserva status);
+    long countByStatusAndSolicitanteId(StatusReserva status, Long solicitanteId);
+
+    @Query("""
+    SELECT r FROM Reserva r
+    WHERE r.inicio >= :agora
+      AND r.status = 'APROVADA'
+    ORDER BY r.inicio ASC
+""")
+    List<Reserva> findProximasAprovadas(@Param("agora") Instant agora, Pageable pageable);
+
+    @Query("""
+    SELECT r FROM Reserva r
+    WHERE r.inicio >= :agora
+      AND r.status = 'APROVADA'
+      AND r.solicitante.id = :solicitanteId
+    ORDER BY r.inicio ASC
+""")
+    List<Reserva> findProximasAprovadasBySolicitante(
+            @Param("agora") Instant agora,
+            @Param("solicitanteId") Long solicitanteId,
+            Pageable pageable);
 }

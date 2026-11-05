@@ -1,7 +1,9 @@
 package com.sindipro.api.unidade;
 
+import com.sindipro.api.security.SecurityUser;
 import com.sindipro.api.unidade.dto.UnidadeRequest;
 import com.sindipro.api.unidade.dto.UnidadeResponse;
+import com.sindipro.api.usuario.Role;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -24,7 +27,14 @@ public class UnidadeController {
     @GetMapping
     public ResponseEntity<List<UnidadeResponse>> listar(
             @RequestParam(required = false) Long blocoId,
-            @RequestParam(required = false) Boolean ativo) {
+            @RequestParam(required = false) Boolean ativo,
+            @RequestParam(required = false) Boolean minhas,
+            @AuthenticationPrincipal SecurityUser user) {
+
+        if (Boolean.TRUE.equals(minhas)
+                && user.getUsuario().getRole() == Role.MORADOR) {
+            return ResponseEntity.ok(service.listarMinhas(user.getUsuario().getId()));
+        }
         return ResponseEntity.ok(service.listar(blocoId, ativo));
     }
 

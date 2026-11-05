@@ -18,6 +18,7 @@ public class UnidadeService {
 
     private final UnidadeRepository repository;
     private final BlocoRepository blocoRepository;
+    private final com.sindipro.api.moradorunidade.MoradorUnidadeRepository moradorUnidadeRepository;
 
     @Transactional(readOnly = true)
     public List<UnidadeResponse> listar(Long blocoId, Boolean ativo) {
@@ -84,5 +85,12 @@ public class UnidadeService {
     private Unidade obter(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.List<UnidadeResponse> listarMinhas(Long usuarioId) {
+        return moradorUnidadeRepository.findByUsuarioIdComUnidadeEBloco(usuarioId).stream()
+                .map(mu -> UnidadeResponse.from(mu.getUnidade()))
+                .toList();
     }
 }

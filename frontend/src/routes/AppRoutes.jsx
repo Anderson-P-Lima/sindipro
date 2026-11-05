@@ -9,6 +9,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Comunicados from '../pages/Comunicados';
 import AreasComuns from '../pages/AreasComuns';
 import Ocorrencias from '../pages/Ocorrencias';
+import Reservas from '../pages/Reservas';
 
 export default function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export default function AppRoutes() {
           <Route path="/comunicados" element={<Comunicados />} />
           <Route path="/areas-comuns" element={<AreasComuns />} />
           <Route path="/ocorrencias" element={<Ocorrencias />} />
+          <Route path="/reservas" element={<Reservas />} />
         </Route>
       </Route>
 

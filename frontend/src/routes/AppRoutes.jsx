@@ -7,6 +7,8 @@ import TermosUso from '../pages/TermosUso';
 import Layout from '../components/layout/Layout';
 import ProtectedRoute from './ProtectedRoute';
 import Comunicados from '../pages/Comunicados';
+import AreasComuns from '../pages/AreasComuns';
+import Ocorrencias from '../pages/Ocorrencias';
 
 export default function AppRoutes() {
   return (
@@ -21,6 +23,8 @@ export default function AppRoutes() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/comunicados" element={<Comunicados />} />
+          <Route path="/areas-comuns" element={<AreasComuns />} />
+          <Route path="/ocorrencias" element={<Ocorrencias />} />
         </Route>
       </Route>
 

@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 const menuItems = [
   { to: '/dashboard',   icon: 'bi-speedometer2',   label: 'Dashboard',   roles: null },
   { to: '/comunicados', icon: 'bi-megaphone',      label: 'Comunicados', roles: null },
+  { to: '/areas-comuns', icon: 'bi-door-open',      label: 'Áreas Comuns', roles: null },
   { to: '/reservas',    icon: 'bi-calendar-check', label: 'Reservas',    roles: null },
   { to: '/ocorrencias', icon: 'bi-tools',          label: 'Ocorrências', roles: null },
   { to: '/financeiro',  icon: 'bi-cash-coin',      label: 'Financeiro',  roles: ['ADMIN_SISTEMA', 'SINDICO'] },

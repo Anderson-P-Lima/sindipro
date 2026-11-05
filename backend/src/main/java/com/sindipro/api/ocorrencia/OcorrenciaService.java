@@ -198,4 +198,14 @@ public class OcorrenciaService {
 
         return null;
     }
+
+    public java.util.List<com.sindipro.api.usuario.dto.UsuarioResponse> responsaveisElegiveis() {
+    return usuarioRepository.findAll().stream()
+            .filter(u -> Boolean.TRUE.equals(u.getAtivo()))
+            .filter(u -> u.getRole() == Role.ZELADOR
+                      || u.getRole() == Role.SINDICO
+                      || u.getRole() == Role.ADMIN_SISTEMA)
+            .map(com.sindipro.api.usuario.dto.UsuarioResponse::from)
+            .toList();
+}
 }

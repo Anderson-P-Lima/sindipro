@@ -34,6 +34,12 @@ public class OcorrenciaController {
                 service.listar(pageable, status, prioridade, responsavelId, user.getUsuario()));
     }
 
+    @GetMapping("/responsaveis-elegiveis")
+    @PreAuthorize("hasAnyRole('ADMIN_SISTEMA','SINDICO')")
+    public ResponseEntity<java.util.List<com.sindipro.api.usuario.dto.UsuarioResponse>> responsaveisElegiveis() {
+        return ResponseEntity.ok(service.responsaveisElegiveis());
+    }
+    
     @GetMapping("/{id}")
     public ResponseEntity<OcorrenciaResponse> buscar(
             @PathVariable Long id,

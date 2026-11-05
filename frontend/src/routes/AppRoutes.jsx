@@ -6,6 +6,7 @@ import PoliticaPrivacidade from '../pages/PoliticaPrivacidade';
 import TermosUso from '../pages/TermosUso';
 import Layout from '../components/layout/Layout';
 import ProtectedRoute from './ProtectedRoute';
+import Comunicados from '../pages/Comunicados';
 
 export default function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/comunicados" element={<Comunicados />} />
         </Route>
       </Route>
 

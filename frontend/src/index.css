@@ -17,8 +17,27 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+a:hover > .card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+  transition: all 0.15s ease;
+}
+
 .nav-link.active {
   font-weight: 500;
+}
+
+.last-no-border:last-child {
+  border-bottom: none !important;
+}
+
+.spin-anim {
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Foco visível para acessibilidade (WCAG 2.1 AA) */

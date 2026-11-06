@@ -7,7 +7,7 @@ import com.sindipro.api.auth.dto.LoginRequest;
 import com.sindipro.api.auth.dto.RegisterRequest;
 import com.sindipro.api.security.JwtService;
 import com.sindipro.api.security.SecurityUser;
-import com.sindipro.api.shared.exception.BusinessException;
+import com.sindipro.api.shared.exception.ResourceConflictException;
 import com.sindipro.api.usuario.Usuario;
 import com.sindipro.api.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class AuthService {
     @Transactional
     public AuthResponse registrar(RegisterRequest req) {
         if (usuarioRepository.existsByEmail(req.email())) {
-            throw new BusinessException("E-mail já cadastrado");
+            throw new ResourceConflictException("E-mail já cadastrado");
         }
 
         Usuario u = Usuario.builder()

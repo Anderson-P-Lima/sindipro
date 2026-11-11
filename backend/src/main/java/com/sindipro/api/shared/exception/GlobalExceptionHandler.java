@@ -73,6 +73,13 @@ public class GlobalExceptionHandler {
                 req, null);
     }
 
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+        public ResponseEntity<ErrorResponse> handleNoResource(
+                org.springframework.web.servlet.resource.NoResourceFoundException ex,
+                HttpServletRequest req) {
+            return build(HttpStatus.NOT_FOUND, "Recurso não encontrado", req, null);
+        }
+
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String msg,
                                                 HttpServletRequest req, List<String> details) {
         ErrorResponse body = new ErrorResponse(

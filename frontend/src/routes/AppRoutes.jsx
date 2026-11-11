@@ -10,6 +10,9 @@ import Comunicados from '../pages/Comunicados';
 import AreasComuns from '../pages/AreasComuns';
 import Ocorrencias from '../pages/Ocorrencias';
 import Reservas from '../pages/Reservas';
+import Financeiro from '../pages/Financeiro';
+import Unidades from '../pages/Unidades';
+import Usuarios from '../pages/Usuarios';
 
 export default function AppRoutes() {
   return (
@@ -27,6 +30,9 @@ export default function AppRoutes() {
           <Route path="/areas-comuns" element={<AreasComuns />} />
           <Route path="/ocorrencias" element={<Ocorrencias />} />
           <Route path="/reservas" element={<Reservas />} />
+          <Route path="/financeiro" element={<Financeiro />} />
+          <Route path="/unidades" element={<Unidades />} />
+          <Route path="/usuarios" element={<Usuarios />} />
         </Route>
       </Route>
 

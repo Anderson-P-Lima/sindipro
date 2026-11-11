@@ -36,7 +36,7 @@ springdoc:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:change-me-in-production-please-use-a-very-long-secret-key-here-1234567890}
+    secret: ${JWT_SECRET:pGoNpNxw9qiLmD76/jx5PqGcIbMzmxxHWtvOISYrCGU=}
     expiration-ms: 86400000
   cors:
     allowed-origins: ${CORS_ORIGINS:http://localhost:5173}

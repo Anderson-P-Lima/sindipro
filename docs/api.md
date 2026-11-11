@@ -1,4 +1,3 @@
-```markdown
 # Referência da API
 
 Documentação dos endpoints REST do SindiPro. Todas as rotas têm prefixo `/api/v1`.
@@ -19,7 +18,7 @@ Documentação dos endpoints REST do SindiPro. Todas as rotas têm prefixo `/api
 ### Autenticação
 
 A maioria dos endpoints exige o header:
-```
+
 
 #### Authorization: Bearer <JWT>
 

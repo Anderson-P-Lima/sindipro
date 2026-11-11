@@ -270,7 +270,7 @@ CORS_ORIGINS=https://sindipro.vercel.app
 Na Vercel (front-end):
 
 text
-VITE_API_URL=https://sindipro-api.onrender.com/api/v1
+VITE_API_URL=https://sindipro.onrender.com/api/v1
 ⚠️ Plano gratuito do Render hiberna o back-end após 15 minutos de inatividade. Primeira requisição após hibernação leva ~30s. Se ocorrer, basta aguardar e tentar novamente.
 
 Instruções completas em docs/deploy.md (roadmap).

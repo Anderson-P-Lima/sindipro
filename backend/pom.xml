@@ -82,6 +82,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Render Actuator  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- OpenAPI / Swagger (Versão 3.0.0+ é necessária para SB4) -->
         <dependency>
             <groupId>org.springdoc</groupId>

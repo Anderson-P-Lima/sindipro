@@ -7,9 +7,10 @@ const menuItems = [
   { to: '/areas-comuns', icon: 'bi-door-open',      label: 'Áreas Comuns', roles: null },
   { to: '/reservas',    icon: 'bi-calendar-check', label: 'Reservas',    roles: null },
   { to: '/ocorrencias', icon: 'bi-tools',          label: 'Ocorrências', roles: null },
-  { to: '/financeiro',  icon: 'bi-cash-coin',      label: 'Financeiro',  roles: ['ADMIN_SISTEMA', 'SINDICO'] },
-  { to: '/unidades',    icon: 'bi-house-door',     label: 'Unidades',    roles: ['ADMIN_SISTEMA', 'SINDICO'] },
-  { to: '/usuarios',    icon: 'bi-people',         label: 'Usuários',    roles: ['ADMIN_SISTEMA'] },
+  // Fazer depois se puder
+  //{ to: '/financeiro',  icon: 'bi-cash-coin',      label: 'Financeiro',  roles: ['ADMIN_SISTEMA', 'SINDICO'] },
+  //{ to: '/unidades',    icon: 'bi-house-door',     label: 'Unidades',    roles: ['ADMIN_SISTEMA', 'SINDICO'] },
+  //{ to: '/usuarios',    icon: 'bi-people',         label: 'Usuários',    roles: ['ADMIN_SISTEMA'] },
 ];
 
 export default function Sidebar() {

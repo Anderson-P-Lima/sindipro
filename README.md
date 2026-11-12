@@ -106,7 +106,7 @@ O **SindiPro** centraliza comunicação, rotinas e serviços entre síndico, mor
 ### 1. Clonar o repositório
 
 > ```bash
-> git clone https://github.com/sindiproti/sindipro.git
+> git clone https://github.com/Anderson-P-Lima/sindipro.git
 > cd sindipro
 
 ### 2. Subir o banco de dados
@@ -253,8 +253,8 @@ Relatório interativo:
 ## Deploy
 
 Componente	Plataforma	URL (a configurar)
-Front-end	Vercel	https://sindipro.vercel.app
-Back-end	Render	https://sindipro-api.onrender.com
+Front-end	Vercel	https://sindipro-xi.vercel.app
+Back-end	Render	https://sindipro.onrender.com
 Banco	Neon (PostgreSQL)	—
 Variáveis de ambiente necessárias:
 
@@ -266,7 +266,7 @@ SPRING_DATASOURCE_URL=jdbc:postgresql://<neon-host>/<db>?sslmode=require
 SPRING_DATASOURCE_USERNAME=<user>
 SPRING_DATASOURCE_PASSWORD=<senha>
 JWT_SECRET=<string-longa-aleatoria>
-CORS_ORIGINS=https://sindipro.vercel.app
+CORS_ORIGINS=https://sindipro-xi.vercel.app
 ```
 Na Vercel (front-end):
 

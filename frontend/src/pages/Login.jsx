@@ -84,13 +84,10 @@ export default function Login() {
                 </label>
                 <input
                   id="senha"
-                  type="password"
-                  className="form-control"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
                   required
                   autoComplete="current-password"
-                  aria-required="true"
                   disabled={carregando}
                 />
               </div>

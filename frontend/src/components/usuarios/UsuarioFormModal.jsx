@@ -170,14 +170,11 @@ export default function UsuarioFormModal({ aberto, usuario, onFechar, onSalvar }
                   </label>
                   <input
                     id="senha"
-                    type="password"
-                    className="form-control"
                     value={form.senha}
                     onChange={handleChange('senha')}
                     minLength={6}
                     maxLength={100}
                     required
-                    aria-required="true"
                     autoComplete="new-password"
                     disabled={salvando}
                   />

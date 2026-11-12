@@ -260,20 +260,42 @@ Variáveis de ambiente necessárias:
 
 No Render (back-end):
 
-text
+```text
 SPRING_PROFILES_ACTIVE=prod
 SPRING_DATASOURCE_URL=jdbc:postgresql://<neon-host>/<db>?sslmode=require
 SPRING_DATASOURCE_USERNAME=<user>
 SPRING_DATASOURCE_PASSWORD=<senha>
 JWT_SECRET=<string-longa-aleatoria>
 CORS_ORIGINS=https://sindipro.vercel.app
+```
 Na Vercel (front-end):
 
-text
+```text
 VITE_API_URL=https://sindipro.onrender.com/api/v1
-⚠️ Plano gratuito do Render hiberna o back-end após 15 minutos de inatividade. Primeira requisição após hibernação leva ~30s. Se ocorrer, basta aguardar e tentar novamente.
+```
+>⚠️ Plano gratuito do Render hiberna o back-end após 15 minutos de inatividade. Primeira requisição após hibernação leva ~30s. Se ocorrer, basta aguardar e tentar novamente.
 
 Instruções completas em docs/deploy.md (roadmap).
+
+## 🌐 Deploy em produção
+
+| Componente   | Plataforma | URL                                           |
+|--------------|------------|-----------------------------------------------|
+| Front-end    | Vercel     | https://sindipro-xi.vercel.app                |
+| Back-end     | Render     | https://sindipro.onrender.com                 |
+| API          | Render     | https://sindipro.onrender.com/api/v1          |
+| Swagger      | Render     | https://sindipro.onrender.com/swagger-ui.html |
+| Health check | Render     | https://sindipro.onrender.com/actuator/health |
+| Banco        | Neon       | (gerenciado, 12 tabelas)                      |
+
+### Credenciais de demonstração
+
+| Perfil  | E-mail                 | Senha              |
+|---------|------------------------|--------------------|
+| Admin   | `admin@sindipro.app`   | `adminProducao123` |
+| Síndico | `sindico@sindipro.app` | `sindico123`       |
+| Morador | `morador@sindipro.app` | `morador123`       |
+| Zelador | `zelador@sindipro.app` | `zelador123`       |
 
 ## 📁 Estrutura do repositório
 

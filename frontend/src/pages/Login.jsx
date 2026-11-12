@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usePageTitle } from '../hooks/usePageTitle';
+import PasswordInput from '../components/common/PasswordInput';
 
 export default function Login() {
   usePageTitle(
@@ -79,10 +80,8 @@ export default function Login() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="senha" className="form-label">
-                  Senha
-                </label>
-                <input
+                <label htmlFor="senha" className="form-label">Senha</label>
+                <PasswordInput
                   id="senha"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}

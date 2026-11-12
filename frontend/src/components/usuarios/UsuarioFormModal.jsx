@@ -21,13 +21,13 @@ export default function UsuarioFormModal({ aberto, usuario, onFechar, onSalvar }
       setForm(
         usuario
           ? {
-              nome: usuario.nome,
-              email: usuario.email,
-              senha: '',           // nunca preenche no editar
-              cpf: usuario.cpf || '',
-              telefone: usuario.telefone || '',
-              role: usuario.role,
-            }
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: '',           // nunca preenche no editar
+            cpf: usuario.cpf || '',
+            telefone: usuario.telefone || '',
+            role: usuario.role,
+          }
           : formVazio
       );
       setErro('');
@@ -168,14 +168,14 @@ export default function UsuarioFormModal({ aberto, usuario, onFechar, onSalvar }
                   <label htmlFor="senha" className="form-label">
                     Senha <span className="text-danger">*</span>
                   </label>
-                  <input
+                  <PasswordInput
                     id="senha"
                     value={form.senha}
                     onChange={handleChange('senha')}
-                    minLength={6}
-                    maxLength={100}
                     required
                     autoComplete="new-password"
+                    minLength={6}
+                    maxLength={100}
                     disabled={salvando}
                   />
                   <div className="form-text">Mínimo de 6 caracteres.</div>

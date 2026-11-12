@@ -36,7 +36,7 @@ export default function PasswordInput({
         disabled={disabled}
         aria-label={visivel ? 'Ocultar senha' : 'Mostrar senha'}
         aria-pressed={visivel}
-        tabIndex={-1}
+        tabIndex={-1} // Impede que o botão atrapalhe a navegação por Tab
       >
         <i className={`bi bi-eye${visivel ? '-slash' : ''}`} aria-hidden="true"></i>
       </button>

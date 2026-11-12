@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ROLES } from '../../services/usuarioService';
+import PasswordInput from '../common/PasswordInput';
 
 const formVazio = {
   nome: '',

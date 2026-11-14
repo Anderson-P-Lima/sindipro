@@ -5,13 +5,16 @@ import MetricCard from '../components/dashboard/MetricCard';
 import OcorrenciasPorStatusCard from '../components/dashboard/OcorrenciasPorStatusCard';
 import ProximasReservasCard from '../components/dashboard/ProximasReservasCard';
 import FinanceiroResumoCard from '../components/dashboard/FinanceiroResumoCard';
+import GraficoDespesas from '../components/dashboard/GraficoDespesas';
+import GraficoEvolucao from '../components/dashboard/GraficoEvolucao';
+import GraficoRankingAreas from '../components/dashboard/GraficoRankingAreas';
 
 const subtituloPorRole = {
   ADMIN_SISTEMA: 'Visão global do condomínio',
-  SINDICO:       'Visão global do condomínio',
-  MORADOR:       'Visão das suas informações',
-  PORTEIRO:      'Visão operacional',
-  ZELADOR:       'Visão operacional',
+  SINDICO: 'Visão global do condomínio',
+  MORADOR: 'Visão das suas informações',
+  PORTEIRO: 'Visão operacional',
+  ZELADOR: 'Visão operacional',
 };
 
 export default function Dashboard() {
@@ -124,15 +127,38 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Linha 2 — detalhes operacionais */}
+          {/* Linha 2 — detalhes operacionais e gráficos */}
           <div className="row g-3 mb-3">
-            <div className="col-12 col-lg-6">
+            <div className="col-12 col-lg-4">
               <OcorrenciasPorStatusCard resumo={data.ocorrencias} />
             </div>
-            <div className="col-12 col-lg-6">
+            {/* Só aparece se o back-end enviar os dados (evita moradores) */}
+            {data.graficoDespesas && (
+              <div className="col-12 col-lg-4">
+                <GraficoDespesas dados={data.graficoDespesas} />
+              </div>
+            )}
+
+            <div className="col-12 col-lg-4">
               <ProximasReservasCard reservas={data.reservas.proximas} />
             </div>
           </div>
+
+          {/* Linha 2.5 — Evolução Financeira e Rnaking (Só Admin/Síndico) */}
+          {(data.graficoEvolucao || data.graficoRankingAreas) && (
+            <div className="row g-3 mb-3">
+              {data.graficoEvolucao && (
+                <div className="col-12 col-lg-7">
+                  <GraficoEvolucao dados={data.graficoEvolucao} />
+                </div>
+              )}
+              {data.graficoRankingAreas && (
+                <div className="col-12 col-lg-5">
+                  <GraficoRankingAreas dados={data.graficoRankingAreas} />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Linha 3 — financeiro (só se presente) */}
           {data.financeiro && (

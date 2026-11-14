@@ -38,22 +38,33 @@ public interface ReservaRepository extends
     long countByStatusAndSolicitanteId(StatusReserva status, Long solicitanteId);
 
     @Query("""
-    SELECT r FROM Reserva r
-    WHERE r.inicio >= :agora
-      AND r.status = 'APROVADA'
-    ORDER BY r.inicio ASC
-""")
-    List<Reserva> findProximasAprovadas(@Param("agora") Instant agora, Pageable pageable);
+        SELECT r FROM Reserva r
+        WHERE r.inicio >= :agora
+          AND r.status = 'APROVADA'
+        ORDER BY r.inicio ASC
+    """)
+        List<Reserva> findProximasAprovadas(@Param("agora") Instant agora, Pageable pageable);
 
     @Query("""
-    SELECT r FROM Reserva r
-    WHERE r.inicio >= :agora
-      AND r.status = 'APROVADA'
-      AND r.solicitante.id = :solicitanteId
-    ORDER BY r.inicio ASC
-""")
-    List<Reserva> findProximasAprovadasBySolicitante(
-            @Param("agora") Instant agora,
-            @Param("solicitanteId") Long solicitanteId,
-            Pageable pageable);
+        SELECT r FROM Reserva r
+        WHERE r.inicio >= :agora
+          AND r.status = 'APROVADA'
+          AND r.solicitante.id = :solicitanteId
+        ORDER BY r.inicio ASC
+    """)
+        List<Reserva> findProximasAprovadasBySolicitante(
+                @Param("agora") Instant agora,
+                @Param("solicitanteId") Long solicitanteId,
+                Pageable pageable);
+
+    @Query("""
+        SELECT new com.sindipro.api.dashboard.dto.GraficoRankingDTO(r.areaComum.nome, COUNT(r))
+        FROM Reserva r
+        WHERE r.areaComum.condominio.id = :condId
+          AND r.status IN ('APROVADA', 'CONCLUIDA')
+        GROUP BY r.areaComum.nome
+        ORDER BY COUNT(r) DESC
+    """)
+        java.util.List<com.sindipro.api.dashboard.dto.GraficoRankingDTO> sumReservasPorArea(@Param("condId") Long condId);
 }
+

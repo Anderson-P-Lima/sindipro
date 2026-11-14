@@ -81,4 +81,25 @@ public interface LancamentoFinanceiroRepository extends
           AND l.status IN ('PENDENTE','ATRASADO')
     """)
     long countEmAbertoPorUnidades(@Param("unidadeIds") List<Long> unidadeIds);
+
+    @Query("""
+        SELECT new com.sindipro.api.dashboard.dto.GraficoCategoriaDTO(l.categoria, SUM(l.valor))
+        FROM LancamentoFinanceiro l
+        WHERE l.condominio.id = :condId
+          AND l.tipo = 'DESPESA'
+          AND l.status = 'PAGO'
+        GROUP BY l.categoria
+        ORDER BY SUM(l.valor) DESC
+    """)
+    java.util.List<com.sindipro.api.dashboard.dto.GraficoCategoriaDTO> sumDespesasPorCategoria(@Param("condId") Long condId);
+
+    @Query("""
+        SELECT l FROM LancamentoFinanceiro l
+        WHERE l.condominio.id = :condId
+          AND l.status = 'PAGO'
+          AND l.dataPagamento >= :dataInicio
+    """)
+        java.util.List<LancamentoFinanceiro> findPagosAPartirDe(
+                @Param("condId") Long condId,
+                @Param("dataInicio") java.time.LocalDate dataInicio);
 }

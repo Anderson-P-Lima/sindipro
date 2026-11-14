@@ -4,6 +4,10 @@ import com.sindipro.api.comunicado.ComunicadoRepository;
 import com.sindipro.api.condominio.Condominio;
 import com.sindipro.api.condominio.CondominioService;
 import com.sindipro.api.dashboard.dto.DashboardResponse;
+import com.sindipro.api.dashboard.dto.GraficoCategoriaDTO;
+import com.sindipro.api.dashboard.dto.GraficoEvolucaoDTO;
+import com.sindipro.api.dashboard.dto.GraficoRankingDTO;
+import com.sindipro.api.financeiro.LancamentoFinanceiro;
 import com.sindipro.api.financeiro.LancamentoFinanceiroRepository;
 import com.sindipro.api.financeiro.TipoLancamento;
 import com.sindipro.api.moradorunidade.MoradorUnidade;
@@ -24,7 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,11 +58,26 @@ public class DashboardService {
                 .toList()
                 : List.of();
 
+        // Dados específicos para Admin/Síndico
+        List<GraficoCategoriaDTO> graficoDespesas = null;
+        List<GraficoEvolucaoDTO> evolucao = null;
+        List<GraficoRankingDTO> rankingAreas = null;
+
+        if (!isMorador) {
+            Condominio c = condominioService.obterAtual();
+            graficoDespesas = lancamentoRepository.sumDespesasPorCategoria(c.getId());
+            evolucao = gerarGraficoEvolucao(c.getId());
+            rankingAreas = reservaRepository.sumReservasPorArea(c.getId());
+        }
+
         return new DashboardResponse(
                 comunicados(),
                 ocorrencias(isMorador, user),
                 reservas(isMorador, user),
-                financeiro(user, unidadesDoMorador)
+                financeiro(user, unidadesDoMorador),
+                graficoDespesas,
+                evolucao,
+                rankingAreas
         );
     }
 
@@ -127,7 +152,6 @@ public class DashboardService {
     private DashboardResponse.FinanceiroResumo financeiro(Usuario user, List<Long> unidadesDoMorador) {
         Role role = user.getRole();
 
-        // Porteiro e zelador não têm acesso a dados financeiros
         if (role == Role.PORTEIRO || role == Role.ZELADOR) {
             return null;
         }
@@ -168,5 +192,37 @@ public class DashboardService {
                 new DashboardResponse.MesAtual(receitas, despesas, saldo),
                 new DashboardResponse.EmAberto(qtdEmAberto, emAberto)
         );
+    }
+
+    // ---------------- gráficos ----------------
+
+    private List<GraficoEvolucaoDTO> gerarGraficoEvolucao(Long condId) {
+        LocalDate hoje = LocalDate.now();
+        LocalDate inicio = hoje.minusMonths(5).withDayOfMonth(1);
+
+        var pagos = lancamentoRepository.findPagosAPartirDe(condId, inicio);
+
+        var porMes = pagos.stream()
+                .filter(l -> l.getDataPagamento() != null)
+                .collect(Collectors.groupingBy(l -> YearMonth.from(l.getDataPagamento())));
+
+        var resultado = new ArrayList<GraficoEvolucaoDTO>();
+        var fmt = DateTimeFormatter.ofPattern("MMM/yy", new Locale("pt", "BR"));
+
+        for (int i = 5; i >= 0; i--) {
+            YearMonth ym = YearMonth.from(hoje).minusMonths(i);
+            var lancesDoMes = porMes.getOrDefault(ym, Collections.emptyList());
+
+            var rec = lancesDoMes.stream().filter(l -> l.getTipo() == TipoLancamento.RECEITA)
+                    .map(LancamentoFinanceiro::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+            var des = lancesDoMes.stream().filter(l -> l.getTipo() == TipoLancamento.DESPESA)
+                    .map(LancamentoFinanceiro::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            String labelMes = ym.format(fmt);
+            labelMes = labelMes.substring(0, 1).toUpperCase() + labelMes.substring(1);
+
+            resultado.add(new GraficoEvolucaoDTO(labelMes, rec, des));
+        }
+        return resultado;
     }
 }

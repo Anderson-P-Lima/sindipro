@@ -12,7 +12,16 @@ public record DashboardResponse(
         ReservasResumo reservas,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        FinanceiroResumo financeiro
+        FinanceiroResumo financeiro,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<GraficoCategoriaDTO> graficoDespesas,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<GraficoEvolucaoDTO> graficoEvolucao,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<GraficoRankingDTO> graficoRankingAreas
 ) {
 
     public record ComunicadosResumo(long total) {}

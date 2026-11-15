@@ -103,7 +103,7 @@ export default function ReservaCard({ reserva, user, onChangeStatus, onConfirmar
             {pode.cancelar && (
               <button
                 type="button"
-                className="btn btn-sm btn-outline-secondary"
+                className="btn btn-sm btn-outline-danger"
                 onClick={() => onChangeStatus(reserva, 'CANCELADA')}
               >
                 <i className="bi bi-x-circle me-1" aria-hidden="true"></i>

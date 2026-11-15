@@ -138,10 +138,10 @@ export default function OcorrenciaCard({
             {pode.cancelar && (
               <button
                 type="button"
-                className="btn btn-sm btn-outline-secondary"
+                className="btn btn-sm btn-outline-danger"
                 onClick={() => onChangeStatus(ocorrencia, 'CANCELADA')}
               >
-                <i className="bi bi-x-lg me-1" aria-hidden="true"></i>
+                <i className="bi bi-x-circle me-1" aria-hidden="true"></i>
                 Cancelar
               </button>
             )}

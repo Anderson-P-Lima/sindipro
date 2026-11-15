@@ -38,7 +38,7 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container bg-light">
+    <div className="auth-container bg-body-tertiary">
       <div className="container" style={{ maxWidth: 420 }}>
         <div className="text-center mb-4">
           <i
@@ -93,7 +93,7 @@ export default function Login() {
 
               <button
                 type="submit"
-                className="btn btn-primary w-100"
+                className="btn btn-brand w-100"
                 disabled={carregando}
               >
                 {carregando ? (

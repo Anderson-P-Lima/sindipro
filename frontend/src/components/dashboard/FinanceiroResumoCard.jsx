@@ -9,7 +9,7 @@ export default function FinanceiroResumoCard({ financeiro, isMorador }) {
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="h5 mb-0">
-            <i className="bi bi-cash-coin text-info me-2" aria-hidden="true"></i>
+            <i className="bi bi-cash-coin text-success me-2" aria-hidden="true"></i>
             Financeiro — mês atual
           </h2>
           <span className="badge bg-info-subtle text-info-emphasis">

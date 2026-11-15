@@ -1,11 +1,17 @@
 import { 
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, LabelList 
 } from 'recharts';
+import { useTheme } from '../../contexts/ThemeContext';
 
-// Paleta pastel para as barras
 const CORES = ['#8BB8E8', '#A8E6CF', '#FFE082', '#F28B82', '#D1C4E9'];
 
 export default function GraficoRankingAreas({ dados }) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
+  const corTexto = isDark ? '#adb5bd' : '#495057';
+  const corFundoTooltip = isDark ? '#343a40' : '#ffffff';
+
   if (!dados || dados.length === 0) {
     return (
       <div className="card h-100">
@@ -17,11 +23,10 @@ export default function GraficoRankingAreas({ dados }) {
     );
   }
 
-  // Pega as Top 5 áreas
   const dadosFormatados = dados.slice(0, 5).map(d => ({
     name: d.nome,
     total: Number(d.total)
-  })).reverse(); // Reverte para a maior barra ficar no topo (o Recharts desenha de baixo pra cima)
+  })).reverse();
 
   return (
     <div className="card h-100">
@@ -35,32 +40,48 @@ export default function GraficoRankingAreas({ dados }) {
           <ResponsiveContainer>
             <BarChart
               data={dadosFormatados}
-              layout="vertical" // Define o layout horizontal
+              layout="vertical"
               margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
             >
               <XAxis type="number" hide />
+              
               <YAxis 
                 dataKey="name" 
                 type="category" 
                 axisLine={false} 
                 tickLine={false}
-                tick={{ fontSize: 12, fill: '#495057' }}
-                width={110} // Largura fixa para os nomes das áreas
+                tick={{ fontSize: 12, fill: corTexto }} 
+                width={110} 
               />
+              
+              {/* TOOLTIP ATUALIZADO AQUI */}
               <Tooltip 
-                cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+                cursor={{ fill: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}
                 formatter={(value) => [`${value} reservas`, 'Total']}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                itemStyle={{ color: corTexto, fontWeight: 'bold' }} /* <-- CORREÇÃO AQUI */
+                contentStyle={{ 
+                  backgroundColor: corFundoTooltip, 
+                  color: corTexto,
+                  borderRadius: '8px', 
+                  border: isDark ? '1px solid #495057' : 'none', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)' 
+                }}
               />
+              
               <Bar 
                 dataKey="total" 
-                radius={[0, 4, 4, 0]} // Bordas arredondadas só do lado direito
+                radius={[0, 4, 4, 0]} 
                 barSize={24}
               >
                 {dadosFormatados.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={CORES[index % CORES.length]} />
                 ))}
-                <LabelList dataKey="total" position="right" style={{ fontSize: 12, fill: '#6c757d' }} />
+                
+                <LabelList 
+                  dataKey="total" 
+                  position="right" 
+                  style={{ fontSize: 12, fill: corTexto, fontWeight: 'bold' }} 
+                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>

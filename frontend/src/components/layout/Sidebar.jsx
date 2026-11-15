@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const menuItems = [
   { to: '/dashboard',   icon: 'bi-speedometer2',   label: 'Dashboard',   roles: null },
@@ -20,7 +21,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="bg-white border-end d-none d-md-block"
+      className="bg-body border-end d-none d-md-block"
       style={{ width: 240, minHeight: 'calc(100vh - 56px)' }}
     >
       <nav className="nav flex-column p-3" aria-label="Menu principal">
@@ -30,7 +31,7 @@ export default function Sidebar() {
             to={item.to}
             className={({ isActive }) =>
               `nav-link rounded mb-1 d-flex align-items-center ${
-                isActive ? 'active bg-primary text-white' : 'text-dark'
+                isActive ? 'active bg-brand text-white' : 'text-body'
               }`
             }
           >

@@ -1,10 +1,17 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { formatarMoeda } from '../../services/dashboardService';
+import { useTheme } from '../../contexts/ThemeContext';
 
-// Paleta Pastel para as fatias
 const CORES = ['#F28B82', '#8BB8E8', '#A8E6CF', '#FFE082', '#D1C4E9', '#FFCC80', '#80CBC4'];
 
 export default function GraficoDespesas({ dados }) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
+  // Cores dinâmicas
+  const corTexto = isDark ? '#adb5bd' : '#6c757d';
+  const corFundoTooltip = isDark ? '#343a40' : '#ffffff';
+
   if (!dados || dados.length === 0) {
     return (
       <div className="card h-100">
@@ -16,9 +23,8 @@ export default function GraficoDespesas({ dados }) {
     );
   }
 
-  // Recharts precisa de objetos com chaves específicas
   const dadosFormatados = dados.map(d => ({
-    name: d.categoria.replace(/_/g, ' '), // Troca underline por espaço
+    name: d.categoria.replace(/_/g, ' '),
     value: Number(d.total)
   }));
 
@@ -39,7 +45,7 @@ export default function GraficoDespesas({ dados }) {
                 data={dadosFormatados}
                 cx="50%"
                 cy="50%"
-                innerRadius={60} // Cria o buraco da rosca
+                innerRadius={60}
                 outerRadius={80}
                 paddingAngle={2}
                 dataKey="value"
@@ -49,19 +55,29 @@ export default function GraficoDespesas({ dados }) {
                   <Cell key={`cell-${index}`} fill={CORES[index % CORES.length]} />
                 ))}
               </Pie>
+              
+              {/* TOOLTIP ADAPTADO */}
               <Tooltip 
                 formatter={(value) => formatarMoeda(value)}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                contentStyle={{ 
+                  backgroundColor: corFundoTooltip, 
+                  color: corTexto,
+                  borderRadius: '8px', 
+                  border: isDark ? '1px solid #495057' : 'none', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)' 
+                }}
               />
+              
+              {/* LEGENDA ADAPTADA */}
               <Legend 
                 iconType="circle" 
-                wrapperStyle={{ fontSize: '12px' }}
+                wrapperStyle={{ fontSize: '12px', color: corTexto }} 
               />
             </PieChart>
           </ResponsiveContainer>
         </div>
         
-        <div className="text-center mt-3 border-top pt-3">
+        <div className="text-center mt-3 border-top pt-3" style={{ borderColor: 'var(--bs-border-color)' }}>
           <small className="text-secondary d-block">Total de Despesas Pagas</small>
           <strong className="h4 mb-0 text-danger">{formatarMoeda(totalGeral)}</strong>
         </div>

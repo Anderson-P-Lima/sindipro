@@ -144,7 +144,7 @@ export default function OcorrenciaFormModal({ aberto, onFechar, onSalvar }) {
               >
                 Cancelar
               </button>
-              <button type="submit" className="btn btn-primary" disabled={salvando}>
+              <button type="submit" className="btn btn-brand" disabled={salvando}>
                 {salvando && (
                   <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
                 )}

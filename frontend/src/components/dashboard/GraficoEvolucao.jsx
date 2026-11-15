@@ -2,13 +2,20 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
 import { formatarMoeda } from '../../services/dashboardService';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function GraficoEvolucao({ dados }) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const corTexto = isDark ? '#adb5bd' : '#6c757d';
+  const corGrade = isDark ? '#343a40' : '#E5E5E5';
+  const corFundoTooltip = isDark ? '#343a40' : '#ffffff';
+
   if (!dados || dados.length === 0) {
-    return null; // Se não houver dados, não renderiza nada
+    return null; 
   }
 
-  // Formata o eixo Y para mostrar valores resumidos (ex: 1500 -> 1.5k)
   const formatarEixoY = (value) => {
     if (value >= 1000) return `${(value / 1000).toFixed(1)}k`;
     return value;
@@ -31,43 +38,61 @@ export default function GraficoEvolucao({ dados }) {
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
               <defs>
-                {/* Gradiente para Receitas (Verde Pastel) */}
                 <linearGradient id="colorReceitas" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#A8E6CF" stopOpacity={0.8}/>
+                  <stop offset="5%" stopColor="#A8E6CF" stopOpacity={isDark ? 0.4 : 0.8}/>
                   <stop offset="95%" stopColor="#A8E6CF" stopOpacity={0}/>
                 </linearGradient>
-                {/* Gradiente para Despesas (Vermelho Pastel) */}
                 <linearGradient id="colorDespesas" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F28B82" stopOpacity={0.8}/>
+                  <stop offset="5%" stopColor="#F28B82" stopOpacity={isDark ? 0.4 : 0.8}/>
                   <stop offset="95%" stopColor="#F28B82" stopOpacity={0}/>
                 </linearGradient>
               </defs>
 
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E5E5" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={corGrade} />
               
               <XAxis 
                 dataKey="mes" 
-                tick={{ fontSize: 12, fill: '#6c757d' }} 
+                tick={{ fontSize: 12, fill: corTexto }} 
                 tickLine={false} 
                 axisLine={false} 
               />
               
               <YAxis 
                 tickFormatter={formatarEixoY}
-                tick={{ fontSize: 12, fill: '#6c757d' }} 
+                tick={{ fontSize: 12, fill: corTexto }} 
                 tickLine={false} 
                 axisLine={false}
                 width={45}
               />
               
+              {/* TOOLTIP ATUALIZADO COM CORES CUSTOMIZADAS */}
               <Tooltip 
-                formatter={(value) => formatarMoeda(value)}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                formatter={(value, name) => {
+                  // Define a cor baseada no nome da série
+                  const corSerie = name === 'Receitas' ? '#5A9B7C' : '#C76B6B';
+                  return [
+                    <span style={{ color: corSerie, fontWeight: 'bold' }}>
+                      {formatarMoeda(value)}
+                    </span>,
+                    name
+                  ];
+                }}
+                contentStyle={{ 
+                  backgroundColor: corFundoTooltip, 
+                  color: corTexto,
+                  borderRadius: '8px', 
+                  border: isDark ? '1px solid #495057' : 'none', 
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)' 
+                }}
+                itemStyle={{ color: corTexto }}
+                labelStyle={{ color: corTexto, fontWeight: 'bold', marginBottom: '4px' }}
               />
               
-              <Legend iconType="circle" wrapperStyle={{ fontSize: '13px', paddingTop: '10px' }} />
+              <Legend 
+                iconType="circle" 
+                wrapperStyle={{ fontSize: '13px', paddingTop: '10px', color: corTexto }} 
+              />
 
-              {/* Linha de Despesas primeiro para ficar atrás da de receitas */}
               <Area 
                 type="monotone" 
                 name="Despesas"

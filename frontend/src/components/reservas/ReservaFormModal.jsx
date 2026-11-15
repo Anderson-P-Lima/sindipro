@@ -278,7 +278,7 @@ export default function ReservaFormModal({ aberto, onFechar, onSalvar }) {
               </button>
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-brand"
                 disabled={salvando || carregandoDados || unidades.length === 0}
               >
                 {salvando && (

@@ -20,7 +20,7 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public PageResponse<UsuarioResponse> listar(Pageable pageable, Role role, Boolean ativo) {
+    public PageResponse<UsuarioResponse> listar(Pageable pageable, Role role, Boolean ativo, String busca) {
         Page<Usuario> page = repository.findAll((root, query, cb) -> {
             var predicates = new java.util.ArrayList<jakarta.persistence.criteria.Predicate>();
             if (role != null) {
@@ -28,6 +28,13 @@ public class UsuarioService {
             }
             if (ativo != null) {
                 predicates.add(cb.equal(root.get("ativo"), ativo));
+            }
+            if (busca != null && !busca.isBlank()) {
+                String like = "%" + busca.toLowerCase() + "%";
+                predicates.add(cb.or(
+                        cb.like(cb.lower(root.get("nome")), like),
+                        cb.like(cb.lower(root.get("email")), like)
+                ));
             }
             return cb.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
         }, pageable);

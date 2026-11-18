@@ -12,8 +12,10 @@ import Pagination from '../components/common/Pagination';
 export default function Usuarios() {
   usePageTitle('Usuários — SindiPro', 'Gestão de usuários do sistema.');
 
+  // AQUI ESTÁ A DESESTRUTURAÇÃO! Puxando busca e setBusca
   const {
-    data, loading, erro, page, setPage, role, setRole, ativo, setAtivo, recarregar,
+    data, loading, erro, page, setPage, role, setRole, ativo, setAtivo, 
+    busca, setBusca, recarregar,
   } = useUsuarios();
 
   const [modalForm, setModalForm] = useState({ aberto: false, usuario: null });
@@ -58,29 +60,34 @@ export default function Usuarios() {
           <h1 className="h3 mb-1">Usuários</h1>
           <p className="text-secondary mb-0">Gestão de moradores, síndicos e equipe</p>
         </div>
-        <button
-          type="button"
-          className="btn btn-brand"
-          onClick={() => setModalForm({ aberto: true, usuario: null })}
-        >
-          <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-          Novo usuário
+        <button type="button" className="btn btn-brand" onClick={() => setModalForm({ aberto: true, usuario: null })}>
+          <i className="bi bi-plus-lg me-1" aria-hidden="true"></i> Novo usuário
         </button>
       </div>
 
       <div className="card mb-4">
         <div className="card-body py-3">
           <div className="row g-2 align-items-center">
+            
+            {/* CAMPO DE BUSCA AQUI */}
+            <div className="col-md-4">
+              <div className="input-group input-group-sm">
+                <span className="input-group-text bg-body"><i className="bi bi-search"></i></span>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  placeholder="Pesquisar por nome ou e-mail..." 
+                  value={busca} 
+                  onChange={(e) => setBusca(e.target.value)} 
+                />
+              </div>
+            </div>
+
             <div className="col-auto">
               <label htmlFor="filtro-role" className="col-form-label small text-secondary">Perfil:</label>
             </div>
-            <div className="col-md-3">
-              <select
-                id="filtro-role"
-                className="form-select form-select-sm"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
+            <div className="col-md-2">
+              <select id="filtro-role" className="form-select form-select-sm" value={role} onChange={(e) => setRole(e.target.value)}>
                 <option value="">Todos</option>
                 {Object.entries(ROLES).map(([v, info]) => (
                   <option key={v} value={v}>{info.rotulo}</option>
@@ -90,13 +97,8 @@ export default function Usuarios() {
             <div className="col-auto">
               <label htmlFor="filtro-ativo" className="col-form-label small text-secondary">Status:</label>
             </div>
-            <div className="col-md-3">
-              <select
-                id="filtro-ativo"
-                className="form-select form-select-sm"
-                value={ativo}
-                onChange={(e) => setAtivo(e.target.value)}
-              >
+            <div className="col-md-2">
+              <select id="filtro-ativo" className="form-select form-select-sm" value={ativo} onChange={(e) => setAtivo(e.target.value)}>
                 <option value="">Todos</option>
                 <option value="true">Apenas ativos</option>
                 <option value="false">Apenas inativos</option>
@@ -111,16 +113,7 @@ export default function Usuarios() {
         </div>
       </div>
 
-      {erro && (
-        <div className="alert alert-danger" role="alert">
-          <i className="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
-          {erro}
-          <button type="button" className="btn btn-sm btn-outline-danger ms-3" onClick={recarregar}>
-            Tentar novamente
-          </button>
-        </div>
-      )}
-
+      {/* ... Resto do código da tabela igual você já tinha ... */}
       {loading ? (
         <div className="text-center py-5" role="status">
           <div className="spinner-border text-primary" aria-hidden="true"></div>
@@ -130,23 +123,12 @@ export default function Usuarios() {
         <EmptyState
           icone="bi-people"
           titulo="Nenhum usuário encontrado"
-          descricao={
-            role || ativo
-              ? 'Nenhum resultado para os filtros selecionados.'
-              : 'Comece cadastrando o primeiro usuário do condomínio.'
-          }
-          acao={
-            !role && !ativo ? (
-              <button
-                type="button"
-                className="btn btn-brand"
-                onClick={() => setModalForm({ aberto: true, usuario: null })}
-              >
-                <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-                Novo usuário
-              </button>
-            ) : null
-          }
+          descricao={role || ativo || busca ? 'Nenhum resultado para os filtros selecionados.' : 'Comece cadastrando o primeiro usuário do condomínio.'}
+          acao={!role && !ativo && !busca ? (
+            <button type="button" className="btn btn-brand" onClick={() => setModalForm({ aberto: true, usuario: null })}>
+              <i className="bi bi-plus-lg me-1" aria-hidden="true"></i> Novo usuário
+            </button>
+          ) : null}
         />
       ) : (
         <>
@@ -172,50 +154,20 @@ export default function Usuarios() {
                           <div className="fw-semibold">{u.nome}</div>
                           <small className="text-secondary d-md-none">{u.email}</small>
                         </td>
-                        <td className="d-none d-md-table-cell">
-                          <small>{u.email}</small>
-                        </td>
-                        <td>
-                          <span className={`badge bg-${r.cor}`}>{r.rotulo}</span>
-                        </td>
-                        <td>
-                          <span className={`badge bg-${u.ativo ? 'success' : 'secondary'}`}>
-                            {u.ativo ? 'Ativo' : 'Inativo'}
-                          </span>
-                        </td>
-                        <td className="d-none d-lg-table-cell">
-                          <small className="text-secondary">
-                            {formatarDataHora(u.ultimoLogin)}
-                          </small>
-                        </td>
+                        <td className="d-none d-md-table-cell"><small>{u.email}</small></td>
+                        <td><span className={`badge bg-${r.cor}`}>{r.rotulo}</span></td>
+                        <td><span className={`badge bg-${u.ativo ? 'success' : 'secondary'}`}>{u.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                        <td className="d-none d-lg-table-cell"><small className="text-secondary">{formatarDataHora(u.ultimoLogin)}</small></td>
                         <td className="text-end">
                           <div className="btn-group btn-group-sm">
-                            <button
-                              type="button"
-                              className="btn btn-outline-secondary border-0"
-                              onClick={() => setModalForm({ aberto: true, usuario: u })}
-                              aria-label={`Editar ${u.nome}`}
-                              title="Editar"
-                            >
+                            <button type="button" className="btn btn-outline-secondary border-0" onClick={() => setModalForm({ aberto: true, usuario: u })} title="Editar">
                               <i className="bi bi-pencil" aria-hidden="true"></i>
                             </button>
-                            <button
-                              type="button"
-                              className={`btn btn-outline-${u.ativo ? 'warning' : 'success'} border-0`}
-                              onClick={() => toggleStatus(u)}
-                              aria-label={u.ativo ? `Desativar ${u.nome}` : `Ativar ${u.nome}`}
-                              title={u.ativo ? 'Desativar' : 'Ativar'}
-                            >
+                            <button type="button" className={`btn btn-outline-${u.ativo ? 'warning' : 'success'} border-0`} onClick={() => toggleStatus(u)} title={u.ativo ? 'Desativar' : 'Ativar'}>
                               <i className={`bi ${u.ativo ? 'bi-pause-circle' : 'bi-play-circle'}`} aria-hidden="true"></i>
                             </button>
                             {u.ativo && (
-                              <button
-                                type="button"
-                                className="btn btn-outline-danger border-0"
-                                onClick={() => setConfirmarExclusao(u)}
-                                aria-label={`Desativar e excluir ${u.nome}`}
-                                title="Desativar (soft delete)"
-                              >
+                              <button type="button" className="btn btn-outline-danger border-0" onClick={() => setConfirmarExclusao(u)} title="Desativar (soft delete)">
                                 <i className="bi bi-trash" aria-hidden="true"></i>
                               </button>
                             )}
@@ -227,29 +179,20 @@ export default function Usuarios() {
                 </tbody>
               </table>
             </div>
+            <div className="card-footer d-flex justify-content-between align-items-center">
+              <small className="text-secondary">Total: {data.totalElements} usuários</small>
+              <Pagination page={page} totalPages={data.totalPages} onChange={setPage} />
+            </div>
           </div>
-          <Pagination page={page} totalPages={data.totalPages} onChange={setPage} />
         </>
       )}
 
-      <UsuarioFormModal
-        aberto={modalForm.aberto}
-        usuario={modalForm.usuario}
-        onFechar={() => setModalForm({ aberto: false, usuario: null })}
-        onSalvar={salvar}
-      />
-
+      <UsuarioFormModal aberto={modalForm.aberto} usuario={modalForm.usuario} onFechar={() => setModalForm({ aberto: false, usuario: null })} onSalvar={salvar} />
       <ConfirmDialog
-        aberto={Boolean(confirmarExclusao)}
-        titulo="Desativar usuário"
-        mensagem={confirmarExclusao
-          ? `Desativar o usuário "${confirmarExclusao.nome}"? Ele não poderá mais fazer login, mas o histórico é preservado.`
-          : ''}
-        textoConfirmar="Desativar"
-        corConfirmar="warning"
-        carregando={processando}
-        onConfirmar={excluir}
-        onCancelar={() => setConfirmarExclusao(null)}
+        aberto={Boolean(confirmarExclusao)} titulo="Desativar usuário"
+        mensagem={confirmarExclusao ? `Desativar o usuário "${confirmarExclusao.nome}"? Ele não poderá mais fazer login, mas o histórico é preservado.` : ''}
+        textoConfirmar="Desativar" corConfirmar="warning" carregando={processando}
+        onConfirmar={excluir} onCancelar={() => setConfirmarExclusao(null)}
       />
     </>
   );

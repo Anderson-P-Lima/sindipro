@@ -1,11 +1,15 @@
 import api from './api';
 
 export const lancamentoService = {
-  async listar({ page = 0, size = 15, tipo, status, unidadeId } = {}) {
+  async listar({ page = 0, size = 15, tipo, status, unidadeId, dataInicio, dataFim, descricao, categoria } = {}) {
     const params = { page, size, sort: 'dataVencimento,desc' };
     if (tipo) params.tipo = tipo;
     if (status) params.status = status;
     if (unidadeId) params.unidadeId = unidadeId;
+    if (dataInicio) params.dataInicio = dataInicio;
+    if (dataFim) params.dataFim = dataFim;
+    if (descricao) params.descricao = descricao;
+    if (categoria) params.categoria = categoria;
     const { data } = await api.get('/lancamentos', { params });
     return data;
   },
@@ -41,9 +45,9 @@ export const TIPOS = {
 };
 
 export const STATUS_FIN = {
-  PENDENTE:  { rotulo: 'Pendente',  cor: 'warning'   },
-  PAGO:      { rotulo: 'Pago',      cor: 'success'   },
-  ATRASADO:  { rotulo: 'Atrasado',  cor: 'danger'    },
+  PENDENTE: { rotulo: 'Pendente', cor: 'warning' },
+  PAGO: { rotulo: 'Pago', cor: 'success' },
+  ATRASADO: { rotulo: 'Atrasado', cor: 'danger' },
   CANCELADO: { rotulo: 'Cancelado', cor: 'secondary' },
 };
 

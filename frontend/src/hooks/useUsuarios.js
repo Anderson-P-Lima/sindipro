@@ -14,6 +14,9 @@ export function useUsuarios() {
   const [page, setPage] = useState(0);
   const [role, setRole] = useState('');
   const [ativo, setAtivo] = useState('');
+  
+  // 1. O estado da busca fica aqui:
+  const [busca, setBusca] = useState('');
 
   const carregar = useCallback(async () => {
     setLoading(true);
@@ -24,6 +27,7 @@ export function useUsuarios() {
         size: 15,
         role: role || undefined,
         ativo: ativo === '' ? undefined : ativo === 'true',
+        busca: busca || undefined, // 2. Repassando para o service
       });
       setData(resultado);
     } catch (e) {
@@ -31,7 +35,7 @@ export function useUsuarios() {
     } finally {
       setLoading(false);
     }
-  }, [page, role, ativo]);
+  }, [page, role, ativo, busca]); // 3. Adicionar 'busca' nas dependências
 
   useEffect(() => {
     carregar();
@@ -39,18 +43,11 @@ export function useUsuarios() {
 
   useEffect(() => {
     setPage(0);
-  }, [role, ativo]);
+  }, [role, ativo, busca]);
 
   return {
-    data,
-    loading,
-    erro,
-    page,
-    setPage,
-    role,
-    setRole,
-    ativo,
-    setAtivo,
+    data, loading, erro, page, setPage, role, setRole, ativo, setAtivo, 
+    busca, setBusca, // 4. Retornando para a tela usar
     recarregar: carregar,
   };
 }

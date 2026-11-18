@@ -102,4 +102,40 @@ public interface LancamentoFinanceiroRepository extends
         java.util.List<LancamentoFinanceiro> findPagosAPartirDe(
                 @Param("condId") Long condId,
                 @Param("dataInicio") java.time.LocalDate dataInicio);
+
+    @Query(value = """
+        SELECT COALESCE(SUM(l.valor), 0) 
+        FROM lancamento_financeiro l
+        WHERE l.condominio_id = :condId
+          AND l.tipo = :tipo
+          AND l.status = 'PAGO'
+          AND (CAST(:dataInicio AS date) IS NULL OR l.data_vencimento >= CAST(:dataInicio AS date))
+          AND (CAST(:dataFim AS date) IS NULL OR l.data_vencimento <= CAST(:dataFim AS date))
+          AND (CAST(:descricao AS text) IS NULL OR LOWER(l.descricao) LIKE LOWER(CONCAT('%', CAST(:descricao AS text), '%')))
+          AND (CAST(:categoria AS text) IS NULL OR l.categoria = CAST(:categoria AS text))
+    """, nativeQuery = true)
+    BigDecimal sumPagosFiltrados(
+            @Param("condId") Long condId,
+            @Param("tipo") String tipo,
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
+            @Param("descricao") String descricao,
+            @Param("categoria") String categoria);
+
+    @Query(value = """
+        SELECT COALESCE(SUM(l.valor), 0) 
+        FROM lancamento_financeiro l
+        WHERE l.condominio_id = :condId
+          AND l.status IN ('PENDENTE', 'ATRASADO')
+          AND (CAST(:dataInicio AS date) IS NULL OR l.data_vencimento >= CAST(:dataInicio AS date))
+          AND (CAST(:dataFim AS date) IS NULL OR l.data_vencimento <= CAST(:dataFim AS date))
+          AND (CAST(:descricao AS text) IS NULL OR LOWER(l.descricao) LIKE LOWER(CONCAT('%', CAST(:descricao AS text), '%')))
+          AND (CAST(:categoria AS text) IS NULL OR l.categoria = CAST(:categoria AS text))
+    """, nativeQuery = true)
+    BigDecimal sumEmAbertoFiltrado(
+            @Param("condId") Long condId,
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
+            @Param("descricao") String descricao,
+            @Param("categoria") String categoria);
 }

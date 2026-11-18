@@ -30,8 +30,9 @@ public class UsuarioController {
     public ResponseEntity<PageResponse<UsuarioResponse>> listar(
             @RequestParam(required = false) Role role,
             @RequestParam(required = false) Boolean ativo,
+            @RequestParam(required = false) String busca,
             @PageableDefault(size = 20, sort = "nome") Pageable pageable) {
-        return ResponseEntity.ok(service.listar(pageable, role, ativo));
+        return ResponseEntity.ok(service.listar(pageable, role, ativo, busca));
     }
 
     @GetMapping("/{id}")

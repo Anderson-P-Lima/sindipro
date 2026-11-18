@@ -26,14 +26,18 @@ public class LancamentoFinanceiroController {
     private final LancamentoFinanceiroService service;
 
     @GetMapping
-    public ResponseEntity<PageResponse<LancamentoResponse>> listar(
+    public ResponseEntity<com.sindipro.api.financeiro.dto.LancamentoPageResponse> listar(
             @AuthenticationPrincipal SecurityUser user,
             @RequestParam(required = false) TipoLancamento tipo,
             @RequestParam(required = false) StatusLancamento status,
             @RequestParam(required = false) Long unidadeId,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate dataInicio,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate dataFim,
+            @RequestParam(required = false) String descricao,
+            @RequestParam(required = false) String categoria,
             @PageableDefault(size = 20, sort = "dataVencimento") Pageable pageable) {
         return ResponseEntity.ok(
-                service.listar(pageable, tipo, status, unidadeId, user.getUsuario()));
+                service.listar(pageable, tipo, status, unidadeId, dataInicio, dataFim, descricao, categoria, user.getUsuario()));
     }
 
     @GetMapping("/{id}")

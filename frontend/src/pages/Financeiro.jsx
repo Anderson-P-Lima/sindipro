@@ -19,7 +19,8 @@ export default function Financeiro() {
   const isAdmin = user?.role === 'ADMIN_SISTEMA';
 
   const {
-    data, loading, erro, page, setPage, tipo, setTipo, status, setStatus, recarregar,
+    data, loading, erro, page, setPage, tipo, setTipo, status, setStatus,
+    dataInicio, setDataInicio, dataFim, setDataFim, descricao, setDescricao, categoria, setCategoria, recarregar,
   } = useLancamentos();
 
   const [modalForm, setModalForm] = useState({ aberto: false, lancamento: null });
@@ -73,17 +74,6 @@ export default function Financeiro() {
   const podeCancelar = (l) => ['PENDENTE', 'ATRASADO'].includes(l.status);
   const podeExcluir = (l) => l.status === 'PENDENTE';
 
-  const totais = data.content.reduce(
-    (acc, l) => {
-      const v = Number(l.valor);
-      if (l.tipo === 'RECEITA' && l.status === 'PAGO') acc.receitas += v;
-      if (l.tipo === 'DESPESA' && l.status === 'PAGO') acc.despesas += v;
-      if (['PENDENTE', 'ATRASADO'].includes(l.status)) acc.emAberto += v;
-      return acc;
-    },
-    { receitas: 0, despesas: 0, emAberto: 0 }
-  );
-
   return (
     <>
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
@@ -103,74 +93,81 @@ export default function Financeiro() {
         )}
       </div>
 
-      {podeGerenciar && data.content.length > 0 && (
+      {/* CARDS DE RESUMO GLOBAL */}
+      {podeGerenciar && (
         <div className="row g-3 mb-4">
           <div className="col-md-4">
             <div className="card border-start border-4 border-success">
               <div className="card-body py-2">
-                <small className="text-secondary d-block">Receitas pagas</small>
-                <h3 className="h5 mb-0 text-success">{formatarMoeda(totais.receitas)}</h3>
+                <small className="text-secondary d-block">Receitas pagas (Total)</small>
+                <h3 className="h5 mb-0 text-success">{formatarMoeda(data.resumo?.totalReceitas)}</h3>
               </div>
             </div>
           </div>
           <div className="col-md-4">
             <div className="card border-start border-4 border-danger">
               <div className="card-body py-2">
-                <small className="text-secondary d-block">Despesas pagas</small>
-                <h3 className="h5 mb-0 text-danger">{formatarMoeda(totais.despesas)}</h3>
+                <small className="text-secondary d-block">Despesas pagas (Total)</small>
+                <h3 className="h5 mb-0 text-danger">{formatarMoeda(data.resumo?.totalDespesas)}</h3>
               </div>
             </div>
           </div>
           <div className="col-md-4">
             <div className="card border-start border-4 border-warning">
               <div className="card-body py-2">
-                <small className="text-secondary d-block">Em aberto (página)</small>
-                <h3 className="h5 mb-0 text-warning">{formatarMoeda(totais.emAberto)}</h3>
+                <small className="text-secondary d-block">Em aberto (Total)</small>
+                <h3 className="h5 mb-0 text-warning">{formatarMoeda(data.resumo?.totalEmAberto)}</h3>
               </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* BARRA DE FILTROS EXPANDIDA */}
       <div className="card mb-4">
         <div className="card-body py-3">
-          <div className="row g-2 align-items-center">
-            <div className="col-auto">
-              <label htmlFor="filtro-tipo" className="col-form-label small text-secondary">Tipo:</label>
-            </div>
-            <div className="col-md-3">
-              <select
-                id="filtro-tipo"
-                className="form-select form-select-sm"
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-              >
+          <div className="row g-2 align-items-end">
+            <div className="col-md-2">
+              <label htmlFor="filtro-tipo" className="form-label small text-secondary mb-1">Tipo</label>
+              <select id="filtro-tipo" className="form-select form-select-sm" value={tipo} onChange={(e) => setTipo(e.target.value)}>
                 <option value="">Todos</option>
                 {Object.entries(TIPOS).map(([v, info]) => (
                   <option key={v} value={v}>{info.rotulo}</option>
                 ))}
               </select>
             </div>
-            <div className="col-auto">
-              <label htmlFor="filtro-status" className="col-form-label small text-secondary">Status:</label>
-            </div>
-            <div className="col-md-3">
-              <select
-                id="filtro-status"
-                className="form-select form-select-sm"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
+            <div className="col-md-2">
+              <label htmlFor="filtro-status" className="form-label small text-secondary mb-1">Status</label>
+              <select id="filtro-status" className="form-select form-select-sm" value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value="">Todos</option>
                 {Object.entries(STATUS_FIN).map(([v, info]) => (
                   <option key={v} value={v}>{info.rotulo}</option>
                 ))}
               </select>
             </div>
-            <div className="col text-md-end">
-              <small className="text-secondary">
-                {data.totalElements} {data.totalElements === 1 ? 'lançamento' : 'lançamentos'}
-              </small>
+            <div className="col-md-2">
+              <label htmlFor="filtro-categoria" className="form-label small text-secondary mb-1">Categoria</label>
+              <select id="filtro-categoria" className="form-select form-select-sm" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+                <option value="">Todas</option>
+                <option value="TAXA_CONDOMINIO">Taxa Condomínio</option>
+                <option value="ALUGUEL_AREA">Aluguel Área</option>
+                <option value="MANUTENCAO">Manutenção</option>
+                <option value="UTILIDADES">Utilidades</option>
+                <option value="FUNCIONARIOS">Funcionários</option>
+                <option value="EVENTO">Eventos</option>
+              </select>
+            </div>
+            <div className="col-md-2">
+              <label htmlFor="filtro-inicio" className="form-label small text-secondary mb-1">Venc. de</label>
+              <input id="filtro-inicio" type="date" className="form-control form-control-sm" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+            </div>
+            <div className="col-md-2">
+              <label htmlFor="filtro-fim" className="form-label small text-secondary mb-1">Venc. até</label>
+              <input id="filtro-fim" type="date" className="form-control form-control-sm" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
+            </div>
+            <div className="col-md-2">
+              <label htmlFor="filtro-busca" className="form-label small text-secondary mb-1">Descrição</label>
+              <input id="filtro-busca" type="text" className="form-control form-control-sm" placeholder="Buscar..." value={descricao} onChange={(e) => setDescricao(e.target.value)} />
             </div>
           </div>
         </div>
@@ -191,17 +188,17 @@ export default function Financeiro() {
           <div className="spinner-border text-primary" aria-hidden="true"></div>
           <p className="text-secondary mt-2 mb-0">Carregando...</p>
         </div>
-      ) : data.content.length === 0 ? (
+      ) : data.page.content.length === 0 ? (
         <EmptyState
           icone="bi-cash-coin"
           titulo="Nenhum lançamento encontrado"
           descricao={
-            tipo || status
+            tipo || status || descricao || categoria
               ? 'Nenhum resultado para os filtros selecionados.'
               : 'Comece registrando a primeira receita ou despesa.'
           }
           acao={
-            podeGerenciar && !tipo && !status ? (
+            podeGerenciar && !tipo && !status && !descricao && !categoria ? (
               <button
                 type="button"
                 className="btn btn-brand"
@@ -229,7 +226,7 @@ export default function Financeiro() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.content.map((l) => {
+                  {data.page.content.map((l) => { // AQUI: data.page.content
                     const tp = TIPOS[l.tipo];
                     const st = STATUS_FIN[l.status];
                     return (
@@ -262,46 +259,22 @@ export default function Financeiro() {
                           {podeGerenciar && (
                             <div className="btn-group btn-group-sm">
                               {podePagar(l) && (
-                                <button
-                                  type="button"
-                                  className="btn btn-outline-success border-0"
-                                  onClick={() => setPagando(l)}
-                                  aria-label={`Registrar pagamento de ${l.descricao}`}
-                                  title="Registrar pagamento"
-                                >
+                                <button type="button" className="btn btn-outline-success border-0" onClick={() => setPagando(l)} title="Registrar pagamento">
                                   <i className="bi bi-check-circle" aria-hidden="true"></i>
                                 </button>
                               )}
                               {podeEditar(l) && (
-                                <button
-                                  type="button"
-                                  className="btn btn-outline-secondary border-0"
-                                  onClick={() => setModalForm({ aberto: true, lancamento: l })}
-                                  aria-label={`Editar ${l.descricao}`}
-                                  title="Editar"
-                                >
+                                <button type="button" className="btn btn-outline-secondary border-0" onClick={() => setModalForm({ aberto: true, lancamento: l })} title="Editar">
                                   <i className="bi bi-pencil" aria-hidden="true"></i>
                                 </button>
                               )}
                               {podeCancelar(l) && (
-                                <button
-                                  type="button"
-                                  className="btn btn-outline-warning border-0"
-                                  onClick={() => setConfirmarCancelamento(l)}
-                                  aria-label={`Cancelar ${l.descricao}`}
-                                  title="Cancelar"
-                                >
+                                <button type="button" className="btn btn-outline-warning border-0" onClick={() => setConfirmarCancelamento(l)} title="Cancelar">
                                   <i className="bi bi-x-circle" aria-hidden="true"></i>
                                 </button>
                               )}
                               {isAdmin && podeExcluir(l) && (
-                                <button
-                                  type="button"
-                                  className="btn btn-outline-danger border-0"
-                                  onClick={() => setConfirmarExclusao(l)}
-                                  aria-label={`Excluir ${l.descricao}`}
-                                  title="Excluir"
-                                >
+                                <button type="button" className="btn btn-outline-danger border-0" onClick={() => setConfirmarExclusao(l)} title="Excluir">
                                   <i className="bi bi-trash" aria-hidden="true"></i>
                                 </button>
                               )}
@@ -314,49 +287,32 @@ export default function Financeiro() {
                 </tbody>
               </table>
             </div>
+            <div className="card-footer d-flex justify-content-between align-items-center">
+              <small className="text-secondary">
+                Total: {data.page.totalElements} lançamentos
+              </small>
+              <Pagination page={page} totalPages={data.page.totalPages} onChange={setPage} />
+            </div>
           </div>
-          <Pagination page={page} totalPages={data.totalPages} onChange={setPage} />
         </>
       )}
 
-      <LancamentoFormModal
-        aberto={modalForm.aberto}
-        lancamento={modalForm.lancamento}
-        onFechar={() => setModalForm({ aberto: false, lancamento: null })}
-        onSalvar={salvar}
-      />
-
-      <RegistrarPagamentoModal
-        aberto={Boolean(pagando)}
-        lancamento={pagando}
-        onFechar={() => setPagando(null)}
-        onConfirmar={registrarPagamento}
-      />
-
+      <LancamentoFormModal aberto={modalForm.aberto} lancamento={modalForm.lancamento} onFechar={() => setModalForm({ aberto: false, lancamento: null })} onSalvar={salvar} />
+      <RegistrarPagamentoModal aberto={Boolean(pagando)} lancamento={pagando} onFechar={() => setPagando(null)} onConfirmar={registrarPagamento} />
+      
       <ConfirmDialog
         aberto={Boolean(confirmarCancelamento)}
         titulo="Cancelar lançamento"
-        mensagem={confirmarCancelamento
-          ? `Cancelar "${confirmarCancelamento.descricao}"? O lançamento será marcado como CANCELADO.`
-          : ''}
-        textoConfirmar="Cancelar lançamento"
-        corConfirmar="warning"
-        carregando={processando}
-        onConfirmar={cancelar}
-        onCancelar={() => setConfirmarCancelamento(null)}
+        mensagem={confirmarCancelamento ? `Cancelar "${confirmarCancelamento.descricao}"? O lançamento será marcado como CANCELADO.` : ''}
+        textoConfirmar="Cancelar lançamento" corConfirmar="warning" carregando={processando}
+        onConfirmar={cancelar} onCancelar={() => setConfirmarCancelamento(null)}
       />
-
       <ConfirmDialog
         aberto={Boolean(confirmarExclusao)}
         titulo="Excluir lançamento"
-        mensagem={confirmarExclusao
-          ? `Excluir permanentemente "${confirmarExclusao.descricao}"?`
-          : ''}
-        textoConfirmar="Excluir"
-        corConfirmar="danger"
-        carregando={processando}
-        onConfirmar={excluir}
-        onCancelar={() => setConfirmarExclusao(null)}
+        mensagem={confirmarExclusao ? `Excluir permanentemente "${confirmarExclusao.descricao}"?` : ''}
+        textoConfirmar="Excluir" corConfirmar="danger" carregando={processando}
+        onConfirmar={excluir} onCancelar={() => setConfirmarExclusao(null)}
       />
     </>
   );

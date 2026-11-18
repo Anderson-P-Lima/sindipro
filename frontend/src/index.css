@@ -2,15 +2,15 @@
 :root {
   /* Sobrescrevendo as cores primárias do Bootstrap */
   --bs-primary: #4A7C9D;
-  --bs-primary-rgb: 139, 184, 232;
-  --bs-success: #A8E6CF;
-  --bs-success-rgb: 168, 230, 207;
-  --bs-danger: #F28B82;
-  --bs-danger-rgb: 242, 139, 130;
-  --bs-warning: #FFE082;
-  --bs-warning-rgb: 255, 224, 130;
-  --bs-info: #80CBC4;
-  --bs-info-rgb: 128, 203, 196;
+  --bs-primary-rgb: 74, 124, 157;
+  --bs-success: #5D9C7E;
+  --bs-success-rgb: 93, 156, 126;
+  --bs-danger: #D16B6B;
+  --bs-danger-rgb: 209, 107, 107;
+  --bs-warning: #D4A94A;
+  --bs-warning-rgb: 212, 169, 74;
+  --bs-info: #4DB6AC;
+  --bs-info-rgb: 77, 182, 172;
 
   /* Fundos e Textos */
   --bs-body-bg: #F8F9FA;
@@ -71,42 +71,44 @@ body {
 [data-bs-theme="dark"] {
   --bs-primary: #4A7C9D;
   --bs-primary-rgb: 74, 124, 157;
-  --bs-success: #5A9B7C;
-  --bs-success-rgb: 90, 155, 124;
-  --bs-danger: #C76B6B;
-  --bs-danger-rgb: 199, 107, 107;
-  --bs-warning: #B89B5E;
-  --bs-warning-rgb: 184, 155, 94;
-
+  --bs-success: #a8e6cf;
+  --bs-success-rgb: 93, 156, 126;
+  --bs-danger: #F28B82;
+  --bs-danger-rgb: 242, 139, 130;
+  --bs-warning: #FFE082;
+  --bs-warning-rgb: 255, 224, 130;
+  --bs-info: #80CBC4;
+  --bs-info-rgb: 128, 203, 196;
+  
   --bs-body-bg: #121212;
   --bs-body-color: #E1E1E1;
 }
 
 /* Reset dos botões no modo escuro (texto volta a ser branco) */
 [data-bs-theme="dark"] .btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-hover-color: #fff;
+  --bs-btn-color: #0B2A4A; 
+  --bs-btn-hover-color: #0B2A4A;
 }
 
 [data-bs-theme="dark"] .btn-success {
-  --bs-btn-color: #fff;
-  --bs-btn-hover-color: #fff;
+   --bs-btn-color: #0D3B2E;
+   --bs-btn-hover-color: #0D3B2E;
 }
 
 [data-bs-theme="dark"] .btn-danger {
-  --bs-btn-color: #fff;
-  --bs-btn-hover-color: #fff;
+  --bs-btn-color: #4A1512;
+  --bs-btn-hover-color: #4A1512;
 }
 
 [data-bs-theme="dark"] .btn-warning {
-  --bs-btn-color: #fff;
-  --bs-btn-hover-color: #fff;
+  --bs-btn-color: #4A3B0C;
+  --bs-btn-hover-color: #4A3B0C;
 }
 
 [data-bs-theme="dark"] .text-success {
   color: #A8E6CF !important; 
 }
-/* Outros estilos que já existiam */
+
 .auth-container {
   min-height: 100vh;
   display: flex;

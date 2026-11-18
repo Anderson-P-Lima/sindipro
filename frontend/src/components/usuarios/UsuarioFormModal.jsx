@@ -220,7 +220,7 @@ export default function UsuarioFormModal({ aberto, usuario, onFechar, onSalvar }
                 onClick={onFechar}
                 disabled={salvando}
               >Cancelar</button>
-              <button type="submit" className="btn btn-primary" disabled={salvando}>
+              <button type="submit" className="btn btn-brand" disabled={salvando}>
                 {salvando && (
                   <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
                 )}

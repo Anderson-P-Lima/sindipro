@@ -73,7 +73,7 @@ export default function ReservaCard({ reserva, user, onChangeStatus, onConfirmar
             {pode.aprovar && (
               <button
                 type="button"
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-outline-success"
                 onClick={() => onChangeStatus(reserva, 'APROVADA')}
               >
                 <i className="bi bi-check-lg me-1" aria-hidden="true"></i>

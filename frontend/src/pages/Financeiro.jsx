@@ -94,7 +94,7 @@ export default function Financeiro() {
         {podeGerenciar && (
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-brand"
             onClick={() => setModalForm({ aberto: true, lancamento: null })}
           >
             <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
@@ -204,7 +204,7 @@ export default function Financeiro() {
             podeGerenciar && !tipo && !status ? (
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-brand"
                 onClick={() => setModalForm({ aberto: true, lancamento: null })}
               >
                 <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>

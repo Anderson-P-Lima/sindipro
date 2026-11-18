@@ -1,10 +1,11 @@
 import api from './api';
 
 export const usuarioService = {
-  async listar({ page = 0, size = 15, role, ativo } = {}) {
+  async listar({ page = 0, size = 15, role, ativo, busca } = {}) {
     const params = { page, size, sort: 'nome,asc' };
     if (role) params.role = role;
     if (ativo !== undefined && ativo !== null) params.ativo = ativo;
+    if (busca) params.busca = busca;
     const { data } = await api.get('/usuarios', { params });
     return data;
   },
@@ -37,11 +38,11 @@ export const usuarioService = {
 };
 
 export const ROLES = {
-  ADMIN_SISTEMA: { rotulo: 'Admin',    cor: 'dark'    },
-  SINDICO:       { rotulo: 'Síndico',  cor: 'primary' },
-  MORADOR:       { rotulo: 'Morador',  cor: 'success' },
-  PORTEIRO:      { rotulo: 'Porteiro', cor: 'info'    },
-  ZELADOR:       { rotulo: 'Zelador',  cor: 'warning' },
+  ADMIN_SISTEMA: { rotulo: 'Admin', cor: 'dark' },
+  SINDICO: { rotulo: 'Síndico', cor: 'primary' },
+  MORADOR: { rotulo: 'Morador', cor: 'success' },
+  PORTEIRO: { rotulo: 'Porteiro', cor: 'info' },
+  ZELADOR: { rotulo: 'Zelador', cor: 'warning' },
 };
 
 export function roleInfo(role) {

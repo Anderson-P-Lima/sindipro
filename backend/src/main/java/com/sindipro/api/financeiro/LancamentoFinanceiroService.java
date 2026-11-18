@@ -2,6 +2,7 @@ package com.sindipro.api.financeiro;
 
 import com.sindipro.api.condominio.Condominio;
 import com.sindipro.api.condominio.CondominioService;
+import com.sindipro.api.financeiro.dto.LancamentoPageResponse;
 import com.sindipro.api.financeiro.dto.LancamentoRequest;
 import com.sindipro.api.financeiro.dto.LancamentoResponse;
 import com.sindipro.api.financeiro.dto.RegistrarPagamentoRequest;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,46 +36,57 @@ public class LancamentoFinanceiroService {
     private final CondominioService condominioService;
 
     @Transactional(readOnly = true)
-    public PageResponse<LancamentoResponse> listar(
+    public LancamentoPageResponse listar(
             Pageable pageable,
             TipoLancamento tipo,
             StatusLancamento status,
             Long unidadeId,
+            java.time.LocalDate dataInicio,
+            java.time.LocalDate dataFim,
+            String descricao,
+            String categoria,
             Usuario solicitante) {
 
         Condominio cond = condominioService.obterAtual();
-
-        // Morador só vê lançamentos das suas unidades
         List<Long> unidadesDoMorador = null;
         if (solicitante.getRole() == Role.MORADOR) {
             unidadesDoMorador = moradorUnidadeRepository.findByUsuarioId(solicitante.getId())
-                    .stream()
-                    .map(mu -> mu.getUnidade().getId())
-                    .toList();
+                    .stream().map(mu -> mu.getUnidade().getId()).toList();
         }
         final List<Long> unidadesFiltro = unidadesDoMorador;
 
         Page<LancamentoFinanceiro> page = repository.findAll((root, query, cb) -> {
-            var ps = new ArrayList<Predicate>();
+            var ps = new ArrayList<jakarta.persistence.criteria.Predicate>();
             ps.add(cb.equal(root.get("condominio").get("id"), cond.getId()));
 
-            if (tipo != null)   ps.add(cb.equal(root.get("tipo"), tipo));
+            if (tipo != null) ps.add(cb.equal(root.get("tipo"), tipo));
             if (status != null) ps.add(cb.equal(root.get("status"), status));
             if (unidadeId != null) ps.add(cb.equal(root.get("unidade").get("id"), unidadeId));
-
-            if (unidadesFiltro != null) {
-                if (unidadesFiltro.isEmpty()) {
-                    // Morador sem vínculo não vê nada
-                    ps.add(cb.disjunction());
-                } else {
-                    ps.add(root.get("unidade").get("id").in(unidadesFiltro));
-                }
+            if (dataInicio != null) ps.add(cb.greaterThanOrEqualTo(root.get("dataVencimento"), dataInicio));
+            if (dataFim != null) ps.add(cb.lessThanOrEqualTo(root.get("dataVencimento"), dataFim));
+            if (descricao != null && !descricao.isBlank()) {
+                ps.add(cb.like(cb.lower(root.get("descricao")), "%" + descricao.toLowerCase() + "%"));
+            }
+            if (categoria != null && !categoria.isBlank()) {
+                ps.add(cb.equal(root.get("categoria"), categoria));
             }
 
-            return cb.and(ps.toArray(new Predicate[0]));
+            if (unidadesFiltro != null) {
+                if (unidadesFiltro.isEmpty()) ps.add(cb.disjunction());
+                else ps.add(root.get("unidade").get("id").in(unidadesFiltro));
+            }
+            return cb.and(ps.toArray(new jakarta.persistence.criteria.Predicate[0]));
         }, pageable);
 
-        return PageResponse.from(page, LancamentoResponse::from);
+        // Calcular totais com os mesmos filtros (exceto tipo e status para os cards)
+        BigDecimal totRec = repository.sumPagosFiltrados(cond.getId(), TipoLancamento.RECEITA.name(), dataInicio, dataFim, descricao, categoria);
+        BigDecimal totDes = repository.sumPagosFiltrados(cond.getId(), TipoLancamento.DESPESA.name(), dataInicio, dataFim, descricao, categoria);
+        BigDecimal totAberto = repository.sumEmAbertoFiltrado(cond.getId(), dataInicio, dataFim, descricao, categoria);
+
+        return new LancamentoPageResponse(
+                PageResponse.from(page, LancamentoResponse::from),
+                new LancamentoPageResponse.ResumoFinanceiro(totRec, totDes, totAberto)
+        );
     }
 
     @Transactional(readOnly = true)

@@ -108,7 +108,7 @@ export default function OcorrenciaCard({
             {pode.iniciar && (
               <button
                 type="button"
-                className="btn btn-sm btn-warning"
+                className="btn btn-sm btn-outline-warning"
                 onClick={() => onChangeStatus(ocorrencia, 'EM_ANDAMENTO')}
               >
                 <i className="bi bi-play-fill me-1" aria-hidden="true"></i>
@@ -118,7 +118,7 @@ export default function OcorrenciaCard({
             {pode.resolver && (
               <button
                 type="button"
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-outline-success"
                 onClick={() => onChangeStatus(ocorrencia, 'RESOLVIDA')}
               >
                 <i className="bi bi-check-lg me-1" aria-hidden="true"></i>

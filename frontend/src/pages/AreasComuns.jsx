@@ -63,7 +63,7 @@ export default function AreasComuns() {
         {podeGerenciar && (
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-brand"
             onClick={() => setModalForm({ aberto: true, area: null })}
           >
             <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
@@ -132,7 +132,7 @@ export default function AreasComuns() {
             podeGerenciar && filtroAtivo ? (
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-brand"
                 onClick={() => setModalForm({ aberto: true, area: null })}
               >
                 <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>

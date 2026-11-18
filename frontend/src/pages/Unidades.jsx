@@ -80,7 +80,7 @@ export default function Unidades() {
             </button>
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-brand"
               onClick={() => setModalUnidade({ aberto: true, unidade: null })}
               disabled={blocos.length === 0}
               title={blocos.length === 0 ? 'Crie um bloco primeiro' : 'Nova unidade'}
@@ -157,7 +157,7 @@ export default function Unidades() {
           acao={podeGerenciar ? (
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-brand"
               onClick={() => setModalBloco(true)}
             >
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
@@ -177,7 +177,7 @@ export default function Unidades() {
           acao={podeGerenciar && filtroAtivo ? (
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-brand"
               onClick={() => setModalUnidade({ aberto: true, unidade: null })}
             >
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
